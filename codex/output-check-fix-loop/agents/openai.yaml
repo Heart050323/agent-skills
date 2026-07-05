@@ -1,0 +1,4 @@
+interface:
+  display_name: "Output Check Fix Loop"
+  short_description: "Run output-check, fix findings, and repeat."
+  default_prompt: "Use $output-check-fix-loop to review an output, fix the issues, and repeat until it passes."
