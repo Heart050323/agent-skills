@@ -1,2 +1,8 @@
 .DS_Store
 codex/.system/
+codex/.codex-system-skills.marker
+codex/imagegen/
+codex/openai-docs/
+codex/plugin-creator/
+codex/skill-creator/
+codex/skill-installer/
