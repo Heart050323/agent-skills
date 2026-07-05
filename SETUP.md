@@ -1,14 +1,15 @@
-# デバイスセットアップ手順
+# セットアップ手順
 
 このリポジトリは Claude Code(`claude/`)と Codex(`codex/`)のスキルを1つのソースとして管理する。
 各デバイスでは clone して、エージェントが読む実際のパスにリンクを張る。
 
+リポジトリは public なので clone に認証は不要。push できるのはオーナーのみ。
+オーナー以外の人へ: そのまま clone すれば読み取り専用で使える。
+自分流に改造したい場合は Fork して、Fork 先を clone すること。
+
 ## macOS / Linux
 
-Linux サーバーで Claude Code しか使わない場合は、`.codex` の行を省略してよい。
-共有マシン(学校・会社のサーバー)では、リポジトリ全体の SSH 鍵ではなく
-このリポジトリだけに絞った Fine-grained PAT で clone すること:
-`git clone https://<PAT>@github.com/Heart050323/agent-skills.git ~/agent-skills`
+Claude Code しか使わないマシン(Linux サーバーなど)では、`.codex` の行を省略してよい。
 
 ```bash
 git clone https://github.com/Heart050323/agent-skills.git ~/agent-skills
@@ -46,6 +47,7 @@ if exist %USERPROFILE%\.codex\skills.bak\.system xcopy /E /I %USERPROFILE%\.code
 
 ## 日々の運用
 
-- 他のデバイスでの変更を取り込む: `git -C ~/agent-skills pull`
-- スキルを作成・編集したら: `skill-sync` スキルが Claude/Codex 両方言への移植と commit & push まで行う(手動なら `git add -A && git commit && git push`)
+- 最新を取り込む: `git -C ~/agent-skills pull`
+- スキルを作成・編集したら(オーナーのみ): `skill-sync` スキルが Claude/Codex 両方言への移植と commit & push まで行う(手動なら `git add -A && git commit && git push`)
 - `codex/.system/` は Codex 内部用で git 管理外(.gitignore 済み)。リポジトリには含まれない
+- スキルを1個だけ試したい場合は `npx skills add Heart050323/agent-skills@<スキル名>` でも入れられる
