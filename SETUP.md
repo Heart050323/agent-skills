@@ -3,7 +3,12 @@
 このリポジトリは Claude Code(`claude/`)と Codex(`codex/`)のスキルを1つのソースとして管理する。
 各デバイスでは clone して、エージェントが読む実際のパスにリンクを張る。
 
-## macOS
+## macOS / Linux
+
+Linux サーバーで Claude Code しか使わない場合は、`.codex` の行を省略してよい。
+共有マシン(学校・会社のサーバー)では、リポジトリ全体の SSH 鍵ではなく
+このリポジトリだけに絞った Fine-grained PAT で clone すること:
+`git clone https://<PAT>@github.com/Heart050323/agent-skills.git ~/agent-skills`
 
 ```bash
 git clone https://github.com/Heart050323/agent-skills.git ~/agent-skills

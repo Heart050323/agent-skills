@@ -10,7 +10,7 @@ Every skill lives in both `~/.claude/skills/<name>/` and `~/.codex/skills/<name>
 
 ## Porting procedure
 
-1. Identify the fresher side (`stat -f "%Sm" .../SKILL.md`); it is the source. Never overwrite newer content with older.
+1. Identify the fresher side by SKILL.md modification time (`stat -f %Sm` on macOS, `stat -c %y` on Linux); it is the source. Never overwrite newer content with older.
 2. Copy supporting files (checklists, glossaries, reference `.md`) as-is; they are dialect-neutral.
 3. Rewrite the SKILL.md frontmatter into the target dialect (table below).
 4. Translate tool references in the body (table below). Leave everything else — wording, structure, language — unchanged.
