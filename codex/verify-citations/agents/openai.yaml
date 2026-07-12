@@ -1,0 +1,4 @@
+interface:
+  display_name: 出典検証
+  short_description: 出典の実在と引用形式を厳密チェック
+  default_prompt: $verify-citations
