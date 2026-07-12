@@ -1,0 +1,4 @@
+interface:
+  display_name: 日本語LaTeX論文
+  short_description: 日本語LaTeX論文の点検・修正
+  default_prompt: $latex-paper-ja
