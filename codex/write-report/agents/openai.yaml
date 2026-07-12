@@ -1,0 +1,4 @@
+interface:
+  display_name: レポート作成
+  short_description: 人間らしい文章でレポートを書く
+  default_prompt: $write-report
