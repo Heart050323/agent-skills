@@ -1,7 +1,7 @@
 ---
 name: adaptive-effort
 description: Calibrate reasoning depth and model tier to task difficulty instead of running everything at maximum. Use when starting any task, when spawning subagents or workflows, and when the user mentions speed, cost, or overthinking.
-version: 1.0.0
+version: 1.1.0
 ---
 
 # Adaptive Effort
@@ -24,6 +24,7 @@ The caller's tier does not transfer to subtasks — a hard task is usually mostl
 
 - **Agent tool**: `model: "haiku"` for mechanical fan-out (formatting sweeps, mass lookups), `"sonnet"` for routine implementation, omit (inherit) for hard work.
 - **Workflow `agent()`**: `effort: 'low'` for mechanical stages (extraction, classification, formatting), omit for routine, `'high'` only for verify/judge stages where the run's correctness rides on it.
+- **Worker CLI (`delegate-worker`)**: the delegated subtask's tier picks the worker model — the tier→model table lives in that skill's Run section.
 
 ## Session-level
 

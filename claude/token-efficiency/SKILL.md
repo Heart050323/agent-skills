@@ -1,12 +1,16 @@
 ---
 name: token-efficiency
 description: Apply token-frugal tool habits — filter before reading, delegate broad exploration, transform big files with bash. Use at the start of any task that reads files, runs commands, or explores a codebase, and when the user mentions token cost.
-version: 2.0.0
+version: 2.1.0
 ---
 
 # Token Efficiency
 
 Default to frugal unless the user explicitly asks for full contents or verbose output. Every rule below is one move: **look at the smallest slice that answers the question.**
+
+## Writing code — the biggest lever
+
+Your own generated code is the most expensive token stream there is. Be the **lazy senior**: for any implementation beyond a small edit, fire the `delegate-worker` skill — write the spec, let the worker CLI (Codex/Grok) write the code, and spend your tokens only on the spec and the diff review. Reading rules below trim the input side; this rule cuts the output side, which is where most of the spend lives.
 
 ## Reading
 
