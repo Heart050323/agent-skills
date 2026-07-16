@@ -1,7 +1,7 @@
 ---
 name: adaptive-effort
 description: Calibrate reasoning depth and model tier to task difficulty instead of running everything at maximum. Use when starting any task, when spawning subagents or workflows, and when the user mentions speed, cost, or overthinking.
-version: 1.0.0
+version: 1.1.0
 metadata:
   short-description: Match effort to task difficulty
 ---
@@ -37,3 +37,7 @@ Route mechanical subtasks to the cheapest model available; reserve the strong mo
 When a long stretch of upcoming work is uniformly mechanical (mass renames, data cleanup), tell the user once that a lower model or effort setting would do it at a fraction of the cost — then continue at the current setting unless they switch.
 
 The `token-efficiency` skill governs how few tokens the work consumes; this skill governs which tier does the thinking.
+
+## Codex 向けメモ
+
+claude側 v1.1.0 (2026-07-16) の追記(delegate-worker スキル連携の1行)はオーケストレーター(Fable)専用のため、このポートには含めない。上記のホスト中立な委譲原則が同じ振る舞いをカバーする。

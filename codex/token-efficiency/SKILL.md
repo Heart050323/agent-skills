@@ -40,3 +40,7 @@ Ignore all of the above when the user asks for full output, when filtered output
 For detailed bash patterns (safe globs, macOS/Linux sed differences, notebook manipulation), see [strategies.md](strategies.md).
 
 The `$adaptive-effort` skill decides which model/effort tier runs the work; this skill decides how few tokens the work itself consumes.
+
+## Codex 向けメモ
+
+claude側 v2.1.0 (2026-07-16) の「Writing code — the biggest lever」節(実装を delegate-worker 経由で Codex/Grok に委譲する lazy senior 規則)は、Fable=オーケストレーター構成の専用規則のため、このポートには意図的に含めない — その構成では Codex 自身がワーカー側。
