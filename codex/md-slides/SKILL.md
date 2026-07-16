@@ -1,6 +1,6 @@
 ---
 name: md-slides
-description: ">"
+description: Create slide decks from Markdown with Marp, exporting to PDF, PPTX, or HTML. Use when the user wants slides generated from notes, an outline, or existing Markdown, needs a PDF/PPTX deck file, or says Markdownからスライド/ピッチデッキ作って. For interactive web presentations, use html-slides instead.
 version: "1.0"
 author: claude-office-skills
 license: MIT

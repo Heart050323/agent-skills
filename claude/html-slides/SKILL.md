@@ -5,7 +5,7 @@
 
 # Basic Information
 name: html-slides
-description: ">"
+description: Create interactive HTML presentations with reveal.js — animations, transitions, code highlighting, speaker notes. Use when the user wants a web-based or interactive slide deck, a code walkthrough presentation, or says HTMLスライド/インタラクティブなプレゼン. For Markdown-sourced decks exported to PDF/PPTX, use md-slides instead.
 version: "1.0"
 author: claude-office-skills
 license: MIT
