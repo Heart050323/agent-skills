@@ -1,7 +1,7 @@
 ---
 name: delegate-worker
-description: Delegate implementation work — writing code, refactors, test suites, multi-file migrations — to a worker CLI (Codex/GPT-5.5 first, Grok 4.5 fallback), keeping Claude (Fable) as architect and reviewer to cut Fable-tier token spend. Fire whenever a task involves substantial hands-on implementation, or when the user mentions delegation (codexにやらせて, grokに委譲, delegate to codex/grok). Skip silently when no worker is authenticated or the edit is small enough to do directly.
-version: 1.3.0
+description: Delegate all code writing and file modification — features, bugfixes, refactors, tests, migrations — to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback), keeping Claude (Fable) as architect and reviewer to cut Fable-tier token spend. Delegation is the default for any edit work, not just large tasks; fire whenever code is about to be written or changed, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the skill's tiny-edit exemption.
+version: 2.0.0
 ---
 
 # Delegate to a worker
@@ -18,9 +18,11 @@ Once per session, before first delegation:
 
 ## Delegate or keep
 
-Delegate execution: implementation from a settled design, mechanical refactors, tests against defined behavior, documented migrations across many files, first drafts Claude will review.
+**Delegation is the default for every edit** — features, bugfixes, refactors, tests, migrations, boilerplate. Do not weigh "is this substantial enough"; if code is being written or changed, it goes to the worker.
 
-Keep judgment: architecture and API design, code touching security/money/data-deletion, debugging that needs conversation context, final review, and edits small enough that writing a spec costs more than doing them.
+The one exemption — **tiny edits**: roughly ≤10 changed lines in files already read into context, introducing no new logic (typo, rename, config value, one-guard fix). There the spec would restate more context than the diff itself contains; edit directly.
+
+Keep judgment, always: architecture and API design, deciding *what* to change in code touching security/money/data-deletion (the worker may still type the change from an exact spec), debugging that needs conversation context, and final review.
 
 ## The spec
 
