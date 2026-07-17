@@ -1,7 +1,7 @@
 ---
 name: delegate-worker
-description: Delegate all code writing and file modification — features, bugfixes, refactors, tests, migrations — to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback), keeping Claude (Fable) as architect and reviewer to cut Fable-tier token spend. Delegation is the default for any edit work, not just large tasks; fire whenever code is about to be written or changed, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the skill's tiny-edit exemption.
-version: 2.0.0
+description: Delegate all code writing and file modification — features, bugfixes, refactors, tests, migrations — to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); Claude (Fable) stays architect and reviewer to cut Fable-tier token spend. Fire whenever code is about to be written or changed, at any size, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
+version: 2.1.0
 ---
 
 # Delegate to a worker
@@ -18,7 +18,7 @@ Once per session, before first delegation:
 
 ## Delegate or keep
 
-**Delegation is the default for every edit** — features, bugfixes, refactors, tests, migrations, boilerplate. Do not weigh "is this substantial enough"; if code is being written or changed, it goes to the worker.
+Every edit goes to the worker — do not weigh "is this substantial enough".
 
 The one exemption — **tiny edits**: roughly ≤10 changed lines in files already read into context, introducing no new logic (typo, rename, config value, one-guard fix). There the spec would restate more context than the diff itself contains; edit directly.
 
@@ -43,6 +43,8 @@ codex exec -C <project-root> --skip-git-repo-check -s workspace-write \
   -o <scratchpad>/worker-last.md - < <spec>
 ```
 
+`-o` captures the worker's final message so you never re-read its full transcript. Background it (`run_in_background: true`) for anything non-trivial and keep working. Never use `--dangerously-bypass-approvals-and-sandbox`; `workspace-write` plus review covers every legitimate case.
+
 Pick `<model-flags>` by classifying the **delegated subtask** (not the parent task) on the `adaptive-effort` ladder:
 
 | Tier | Model flags |
@@ -53,14 +55,6 @@ Pick `<model-flags>` by classifying the **delegated subtask** (not the parent ta
 
 A stronger worker means fewer correction round-trips, and each round-trip costs Fable review tokens — so implementation with real correctness pressure is Hard even when the design is settled.
 
-Escalation ladder, climbed only when a Hard delegation fails review twice on the same defect:
-
-1. Resume the worker once at `'"xhigh"'`.
-2. Still failing → take the work back and fix it directly in Fable.
-3. Defect resists a single-context fix (heisenbug, cross-cutting interaction) → go **ultracode**: call the Workflow tool — independent diagnosis fan-out, fix, adversarial verify. This rung spends Fable tokens freely; it is justified exactly because two worker passes and an xhigh pass already failed. (User standing-approved this rung 2026-07-16.)
-
-`-o` captures the worker's final message so you never re-read its full transcript. Background it (`run_in_background: true`) for anything non-trivial and keep working. Corrections after review: `codex exec resume --last "<correction>"` — don't restart from scratch. Never use `--dangerously-bypass-approvals-and-sandbox`; `workspace-write` plus review covers every legitimate case.
-
 Grok fallback invocation and its silent-cancel gotcha: [GROK.md](GROK.md).
 
 ## Review
@@ -69,5 +63,11 @@ The delegation is not done until this passes:
 
 1. Read the diff — `git diff --stat`, then the changed hunks, not whole files. A run that "finished" with no diff means the worker died silently — check its last message, then [GROK.md](GROK.md)/[SETUP.md](SETUP.md) for the failure modes.
 2. Run the acceptance commands yourself. The worker's own "tests pass" claim counts for nothing.
-3. Small fixes: apply directly. Structural misses: resume the worker's session with a correction.
+3. Small fixes: apply directly. Structural misses: resume the worker's session with a correction (`codex exec resume --last "<correction>"`) — don't restart from scratch.
 4. Report what the worker changed, what Claude fixed, and the verification results — labeled as such.
+
+Escalation ladder, climbed only when a Hard delegation fails review twice on the same defect:
+
+1. Resume the worker once at `'"xhigh"'`.
+2. Still failing → take the work back and fix it directly in Fable.
+3. Defect resists a single-context fix (heisenbug, cross-cutting interaction) → go **ultracode**: call the Workflow tool — independent diagnosis fan-out, fix, adversarial verify. This rung spends Fable tokens freely; it is justified exactly because two worker passes and an xhigh pass already failed. (User standing-approved this rung 2026-07-16.)
