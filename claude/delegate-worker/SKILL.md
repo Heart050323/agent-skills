@@ -1,7 +1,7 @@
 ---
 name: delegate-worker
-description: Delegate all code writing and file modification — features, bugfixes, refactors, tests, migrations — to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); Claude (Fable) stays architect and reviewer to cut Fable-tier token spend. Fire whenever code is about to be written or changed, at any size, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
-version: 2.1.0
+description: Delegate all code writing and file modification — features, bugfixes, refactors, tests, migrations — to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); Claude (Fable) stays architect and reviewer to cut Fable-tier token spend. Fire whenever code is about to be written or changed, at any size, when a research/web-investigation task is about to be dispatched, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
+version: 2.2.0
 ---
 
 # Delegate to a worker
@@ -18,7 +18,7 @@ Once per session, before first delegation:
 
 ## Delegate or keep
 
-Every edit goes to the worker — do not weigh "is this substantial enough".
+Every edit goes to the worker — do not weigh "is this substantial enough". So does every research/web investigation (user directive 2026-07-18): dispatching one to a Claude subagent without an explicit cheap model burns Fable-tier tokens and defeats the skill's purpose.
 
 The one exemption — **tiny edits**: roughly ≤10 changed lines in files already read into context, introducing no new logic (typo, rename, config value, one-guard fix). There the spec would restate more context than the diff itself contains; edit directly.
 
@@ -56,6 +56,21 @@ Pick `<model-flags>` by classifying the **delegated subtask** (not the parent ta
 A stronger worker means fewer correction round-trips, and each round-trip costs Fable review tokens — so implementation with real correctness pressure is Hard even when the design is settled.
 
 Grok fallback invocation and its silent-cancel gotcha: [GROK.md](GROK.md).
+
+## Run — research (web)
+
+Investigation with no file edits runs the same pipeline with web search on and the default read-only sandbox (no `-s workspace-write`):
+
+```bash
+codex exec --skip-git-repo-check -c tools.web_search=true \
+  <model-flags> -o <scratchpad>/worker-last.md - < <spec>
+```
+
+`--search` fails to parse under `exec`; the config key is the working form (verified 2026-07-18).
+
+The research spec still stands alone: the question, sources to prioritize, and what "answered" looks like — facts separated from inference, each claim with a source URL. Review = spot-check the load-bearing claims, not every line.
+
+Fallback when the task genuinely needs a Claude subagent (session MCP tools, artifact access): set `model: "haiku"` or `"sonnet"` explicitly — an unspecified model inherits Fable.
 
 ## Review
 
