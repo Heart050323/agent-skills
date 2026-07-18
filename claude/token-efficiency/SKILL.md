@@ -1,12 +1,16 @@
 ---
 name: token-efficiency
 description: Apply token-frugal tool habits — filter before reading, delegate broad exploration, transform big files with bash. Use at the start of any task that reads files, runs commands, or explores a codebase, and when the user mentions token cost.
-version: 2.1.0
+version: 2.2.0
 ---
 
 # Token Efficiency
 
 Default to frugal unless the user explicitly asks for full contents or verbose output. Every rule below is one move: **look at the smallest slice that answers the question.**
+
+## Session length — the silent burner
+
+Context re-reads dominate long-session spend: every turn re-reads the whole conversation, so a days-long session costs orders of magnitude more than its output suggests (measured 2026-07-18: one multi-day session = 85% of all Fable cache traffic). When the current topic closes, tell the user a fresh session is cheaper — memory files carry the continuity.
 
 ## Writing code — the biggest lever
 
