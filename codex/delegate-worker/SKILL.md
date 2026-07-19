@@ -1,12 +1,13 @@
 ---
 name: delegate-worker
-description: Delegate code writing and research to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); Claude (Fable) stays architect and reviewer. Fire whenever code is about to be written or changed, at any size, whenever a research/web-investigation task is about to be dispatched, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
-version: 3.0.0
+description: Delegate code writing and research to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); the host stays architect and reviewer. Fire whenever code is about to be written or changed, at any size, whenever a research/web-investigation task is about to be dispatched, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
+metadata:
+  short-description: Delegate coding to a worker CLI
 ---
 
 # Delegate to a worker
 
-Claude is the **lazy senior**: it decides what to build, writes the spec, reviews the diff — and writes no implementation code itself while a worker is available. The worker executes the spec headless. Decisions never cross that line — only well-specified execution does.
+The host is the **lazy senior**: it decides what to build, writes the spec, reviews the diff — and writes no implementation code itself while a worker is available. The worker executes the spec headless. Decisions never cross that line — only well-specified execution does.
 
 ## Gate — pick the session's worker
 
@@ -18,7 +19,7 @@ Once per session, before first delegation:
 
 ## Delegate or keep
 
-Every edit goes to the worker — do not weigh "is this substantial enough". So does every research/web investigation (user directive 2026-07-18): dispatching one to a Claude subagent without an explicit cheap model burns Fable-tier tokens and defeats the skill's purpose.
+Every edit goes to the worker — do not weigh "is this substantial enough". So does every research/web investigation (user directive 2026-07-18): running one in the host's own context burns host-tier tokens and defeats the skill's purpose.
 
 The one exemption — **tiny edits**: roughly ≤10 changed lines in files already read into context, introducing no new logic (typo, rename, config value, one-guard fix). There the spec would restate more context than the diff itself contains; edit directly.
 
@@ -29,7 +30,7 @@ Keep judgment, always: architecture and API design, deciding *what* to change in
 Pick a lane by one test — not size or file count, but whether the request's essence completes as **one change**:
 
 - **Express** — one change → one spec, one worker. Most delegations.
-- **Fan-out** — the request decomposes into independent subtasks → one spec per subtask, all workers launched in the same message with `run_in_background: true`. Fan out only specs whose file sets are disjoint; specs that overlap run serially instead. Each worker's output is reviewed on its own.
+- **Fan-out** — the request decomposes into independent subtasks → one spec per subtask, all workers launched together in the background. Fan out only specs whose file sets are disjoint; specs that overlap run serially instead. Each worker's output is reviewed on its own.
 
 ## The spec
 
@@ -50,7 +51,7 @@ codex exec -C <project-root> --skip-git-repo-check -s workspace-write \
   -o <scratchpad>/worker-last.md - < <spec>
 ```
 
-`-o` captures the worker's final message so you never re-read its full transcript. Background it (`run_in_background: true`) for anything non-trivial and keep working. Never use `--dangerously-bypass-approvals-and-sandbox`; `workspace-write` plus review covers every legitimate case.
+`-o` captures the worker's final message so you never re-read its full transcript. Run it in the background for anything non-trivial and keep working. Never use `--dangerously-bypass-approvals-and-sandbox`; `workspace-write` plus review covers every legitimate case.
 
 Pick `<model-flags>` by classifying the **delegated subtask** (not the parent task) on the `adaptive-effort` ladder:
 
@@ -60,7 +61,7 @@ Pick `<model-flags>` by classifying the **delegated subtask** (not the parent ta
 | Routine | `-m gpt-5.6-terra -c model_reasoning_effort='"medium"'` |
 | Hard | `-m gpt-5.6-sol -c model_reasoning_effort='"high"'` |
 
-A stronger worker means fewer correction round-trips, and each round-trip costs Fable review tokens — so implementation with real correctness pressure is Hard even when the design is settled.
+A stronger worker means fewer correction round-trips, and each round-trip costs host review tokens — so implementation with real correctness pressure is Hard even when the design is settled.
 
 Grok fallback invocation and its silent-cancel gotcha: [GROK.md](GROK.md).
 
@@ -77,13 +78,13 @@ codex exec --skip-git-repo-check -c tools.web_search=true \
 
 The research spec still stands alone: the question, sources to prioritize, and what "answered" looks like — facts separated from inference, each claim with a source URL. Review = spot-check the load-bearing claims, not every line.
 
-Fallback when the task genuinely needs a Claude subagent (session MCP tools, artifact access): set `model: "haiku"` or `"sonnet"` explicitly — an unspecified model inherits Fable.
+Fallback when the task genuinely needs the host session's own tools (MCP servers, artifact access): do that part yourself.
 
 ## Review
 
 The delegation is not done until this passes:
 
-1. **Pre-review** — diffs over ~150 changed lines get a cheap cross-model pass before Fable reads anything. A second worker from a *different model line* than the writer (Luna wrote → Sol reviews; Sol wrote → Luna reviews), low effort, default read-only sandbox:
+1. **Pre-review** — diffs over ~150 changed lines get a cheap cross-model pass before the host reads anything. A second worker from a *different model line* than the writer (Luna wrote → Sol reviews; Sol wrote → Luna reviews), low effort, default read-only sandbox:
 
    ```bash
    codex exec -C <project-root> --skip-git-repo-check \
@@ -92,14 +93,14 @@ The delegation is not done until this passes:
      "Run git diff and review it against the spec at <spec>. List concrete defects only — file:line and what breaks. Reply CLEAN if none."
    ```
 
-   Defects → resume the writer with the list, re-review. Two rounds max, then Fable takes over regardless. Pre-review filters correction round-trips; it never replaces the steps below.
+   Defects → resume the writer with the list, re-review. Two rounds max, then the host takes over regardless. Pre-review filters correction round-trips; it never replaces the steps below.
 2. Read the diff — `git diff --stat`, then the changed hunks, not whole files. A run that "finished" with no diff means the worker died silently — check its last message, then [GROK.md](GROK.md)/[SETUP.md](SETUP.md) for the failure modes. UI changes: judge the rendered screen too, not the diff alone.
 3. Run the acceptance commands yourself. Neither the worker's "tests pass" nor the pre-reviewer's CLEAN counts for anything.
 4. Small fixes: apply directly. Structural misses: resume the worker's session with a correction (`codex exec resume --last "<correction>"`) — don't restart from scratch.
-5. Report what the worker changed, what Claude fixed, and the verification results — labeled as such.
+5. Report what the worker changed, what the host fixed, and the verification results — labeled as such.
 
 Escalation ladder, climbed only when a Hard delegation fails review twice on the same defect:
 
 1. Resume the worker once at `'"xhigh"'`.
-2. Still failing → take the work back and fix it directly in Fable.
-3. Defect resists a single-context fix (heisenbug, cross-cutting interaction) → go **ultracode**: call the Workflow tool — independent diagnosis fan-out, fix, adversarial verify. This rung spends Fable tokens freely; it is justified exactly because two worker passes and an xhigh pass already failed. (User standing-approved this rung 2026-07-16.)
+2. Still failing → take the work back and fix it directly in the host session.
+3. Defect resists a single-context fix (heisenbug, cross-cutting interaction) → fan out independent diagnosis runs yourself, fix, then adversarially verify. This rung spends host tokens freely; it is justified exactly because two worker passes and an xhigh pass already failed. (User standing-approved this rung 2026-07-16.)
