@@ -1,58 +1,56 @@
 ---
 name: delegate-worker
-description: Delegate code writing and research to a worker CLI (Codex/GPT-5.6 first, Grok 4.5 fallback); Claude (Fable) stays architect and reviewer. Fire whenever code is about to be written or changed, at any size, whenever a research/web-investigation task is about to be dispatched, or when the user mentions delegation (codexにやらせて, delegate to codex/grok). Skip silently only when no worker is authenticated or the change falls under the tiny-edit exemption.
-version: 3.0.0
+description: Delegate non-trivial implementation and web research from Claude/Fable to a worker CLI, and use when the user explicitly asks to delegate the current task. Do not fire merely because delegation is discussed, for tiny edits, or for work requiring host-only tools.
+version: 3.1.0
 ---
 
 # Delegate to a worker
 
-Claude is the **lazy senior**: it decides what to build, writes the spec, reviews the diff — and writes no implementation code itself while a worker is available. The worker executes the spec headless. Decisions never cross that line — only well-specified execution does.
+Claude is the **lazy senior**: decide what to build, write the spec, review the result, and retain judgment. The worker executes a bounded task headlessly.
 
-## Gate — pick the session's worker
+## 1. Decide whether to delegate
 
-Once per session, before first delegation:
+Delegate every non-trivial code edit and web investigation. Also delegate when the user explicitly asks to delegate the current task.
 
-1. Probe Codex: `codex exec --skip-git-repo-check "say ok"` — an auth or credit error disqualifies it.
-2. If Codex fails, probe Grok: `grok -p "say ok" --max-turns 1`.
-3. First worker that answers is the worker for the whole session. Both fail → do the work yourself, tell the user which probes failed (setup: [SETUP.md](SETUP.md)), and don't re-probe this session.
+Keep the task in Claude when delegation itself is only being discussed, the work is a tiny edit (roughly 10 changed lines or fewer with no new logic), or the task needs Claude-session MCP tools or artifacts. Architecture, security/money/data-deletion decisions, conversation-dependent debugging, and final review always stay with Claude; a worker may implement an exact decision.
 
-## Delegate or keep
+This step is complete when the task is classified as worker execution or host work.
 
-Every edit goes to the worker — do not weigh "is this substantial enough". So does every research/web investigation (user directive 2026-07-18): dispatching one to a Claude subagent without an explicit cheap model burns Fable-tier tokens and defeats the skill's purpose.
+## 2. Select the session worker
 
-The one exemption — **tiny edits**: roughly ≤10 changed lines in files already read into context, introducing no new logic (typo, rename, config value, one-guard fix). There the spec would restate more context than the diff itself contains; edit directly.
+After choosing delegation, follow [SETUP.md](SETUP.md) once for the session. Prefer Codex when its login check succeeds; let the first real delegated task test credits and model availability instead of spending a separate model call on `say ok`.
 
-Keep judgment, always: architecture and API design, deciding *what* to change in code touching security/money/data-deletion (the worker may still type the change from an exact spec), debugging that needs conversation context, and final review.
+An authentication, credit, or unavailable-model failure disqualifies that worker. A host safety, permission, or data-transfer denial blocks delegation for that task; do not switch workers to evade it. If no worker is usable, do the work locally, report the failed check or denial once, and do not re-check this session.
 
-## Lanes
+## 3. Choose a lane
 
-Pick a lane by one test — not size or file count, but whether the request's essence completes as **one change**:
+- **Express** — one bounded change or investigation: one spec, one worker.
+- **Fan-out** — independent subtasks with disjoint file sets: one spec per subtask, launched together. Overlapping file sets run serially.
 
-- **Express** — one change → one spec, one worker. Most delegations.
-- **Fan-out** — the request decomposes into independent subtasks → one spec per subtask, all workers launched in the same message with `run_in_background: true`. Fan out only specs whose file sets are disjoint; specs that overlap run serially instead. Each worker's output is reviewed on its own.
+## 4. Write the spec
 
-## The spec
+The worker is blind to the conversation. Write `<scratchpad>/worker-task-NN.md` with:
 
-The worker is blind to this conversation — the spec must stand alone. Write it to `<scratchpad>/worker-task-NN.md` with four sections:
+- **Goal** — what done looks like.
+- **Files** — exact paths and conventions.
+- **Constraints** — boundaries and forbidden changes.
+- **Acceptance** — commands or evidence that must pass.
 
-- **Goal** — one paragraph of what done looks like.
-- **Files** — exact paths to create or modify, and the conventions they follow.
-- **Constraints** — what not to touch, dependencies not to add.
-- **Acceptance** — commands that must pass (`npm test`, `tsc --noEmit`, …).
+The spec is complete when a stranger with no chat history can execute it without making product or architecture decisions.
 
-The spec is done when a stranger with no chat history could execute it.
+## 5. Run the worker
 
-## Run — Codex (primary)
+For implementation:
 
 ```bash
-codex exec -C <project-root> --skip-git-repo-check -s workspace-write \
-  <model-flags> \
-  -o <scratchpad>/worker-last.md - < <spec>
+codex exec -C <project-root> --skip-git-repo-check -s workspace-write --json \
+  <model-flags> -o <scratchpad>/worker-last-NN.md - < <spec> \
+  > <scratchpad>/worker-run-NN.jsonl
 ```
 
-`-o` captures the worker's final message so you never re-read its full transcript. Background it (`run_in_background: true`) for anything non-trivial and keep working. Never use `--dangerously-bypass-approvals-and-sandbox`; `workspace-write` plus review covers every legitimate case.
+Record the writer's `thread_id` from the `thread.started` JSON event in `<scratchpad>/worker-session-NN.txt` before launching another Codex run. Never correct a worker with `resume --last`; resume the recorded writer ID explicitly.
 
-Pick `<model-flags>` by classifying the **delegated subtask** (not the parent task) on the `adaptive-effort` ladder:
+Choose the delegated subtask's tier, not the parent task's tier:
 
 | Tier | Model flags |
 |---|---|
@@ -60,46 +58,31 @@ Pick `<model-flags>` by classifying the **delegated subtask** (not the parent ta
 | Routine | `-m gpt-5.6-terra -c model_reasoning_effort='"medium"'` |
 | Hard | `-m gpt-5.6-sol -c model_reasoning_effort='"high"'` |
 
-A stronger worker means fewer correction round-trips, and each round-trip costs Fable review tokens — so implementation with real correctness pressure is Hard even when the design is settled.
+Run non-trivial work in the background. Never use `--dangerously-bypass-approvals-and-sandbox`.
 
-Grok fallback invocation and its silent-cancel gotcha: [GROK.md](GROK.md).
-
-## Run — research (web)
-
-Investigation with no file edits runs the same pipeline with web search on and the default read-only sandbox (no `-s workspace-write`):
+For web research with no edits, keep the default read-only sandbox and enable search:
 
 ```bash
-codex exec --skip-git-repo-check -c tools.web_search=true \
-  <model-flags> -o <scratchpad>/worker-last.md - < <spec>
+codex exec --skip-git-repo-check -c tools.web_search=true --json \
+  <model-flags> -o <scratchpad>/worker-last-NN.md - < <spec> \
+  > <scratchpad>/worker-run-NN.jsonl
 ```
 
-`--search` fails to parse under `exec`; the config key is the working form (verified 2026-07-18).
+Require facts and inference to be separated and every load-bearing claim to carry a source URL. If the work needs Claude-session tools or artifacts, keep that part in Claude. For Grok fallback details, read [GROK.md](GROK.md) only when Codex fails its login check or first real task for authentication, credit, or model availability.
 
-The research spec still stands alone: the question, sources to prioritize, and what "answered" looks like — facts separated from inference, each claim with a source URL. Review = spot-check the load-bearing claims, not every line.
+## 6. Review
 
-Fallback when the task genuinely needs a Claude subagent (session MCP tools, artifact access): set `model: "haiku"` or `"sonnet"` explicitly — an unspecified model inherits Fable.
-
-## Review
-
-The delegation is not done until this passes:
-
-1. **Pre-review** — diffs over ~150 changed lines get a cheap cross-model pass before Fable reads anything. A second worker from a *different model line* than the writer (Luna wrote → Sol reviews; Sol wrote → Luna reviews), low effort, default read-only sandbox:
+1. For diffs over roughly 150 changed lines, run a low-effort pre-review using a different model line from the writer. Record it as a separate session; it never replaces Claude's review.
+2. Read `git diff --stat`, then every changed hunk. For UI work, inspect the rendered screen.
+3. Run the acceptance commands in Claude. Worker claims and reviewer `CLEAN` are not evidence.
+4. Apply tiny corrections directly. Send structural defects to the recorded writer:
 
    ```bash
-   codex exec -C <project-root> --skip-git-repo-check \
-     -m <other-line> -c model_reasoning_effort='"low"' \
-     -o <scratchpad>/review-NN.md \
-     "Run git diff and review it against the spec at <spec>. List concrete defects only — file:line and what breaks. Reply CLEAN if none."
+   codex exec resume <writer-session-id> "<correction>"
    ```
 
-   Defects → resume the writer with the list, re-review. Two rounds max, then Fable takes over regardless. Pre-review filters correction round-trips; it never replaces the steps below.
-2. Read the diff — `git diff --stat`, then the changed hunks, not whole files. A run that "finished" with no diff means the worker died silently — check its last message, then [GROK.md](GROK.md)/[SETUP.md](SETUP.md) for the failure modes. UI changes: judge the rendered screen too, not the diff alone.
-3. Run the acceptance commands yourself. Neither the worker's "tests pass" nor the pre-reviewer's CLEAN counts for anything.
-4. Small fixes: apply directly. Structural misses: resume the worker's session with a correction (`codex exec resume --last "<correction>"`) — don't restart from scratch.
-5. Report what the worker changed, what Claude fixed, and the verification results — labeled as such.
+5. Report worker changes, Claude corrections, and verification results separately.
 
-Escalation ladder, climbed only when a Hard delegation fails review twice on the same defect:
+The review is complete only when every changed hunk has been inspected and every acceptance item has passed or is reported as blocked.
 
-1. Resume the worker once at `'"xhigh"'`.
-2. Still failing → take the work back and fix it directly in Fable.
-3. Defect resists a single-context fix (heisenbug, cross-cutting interaction) → go **ultracode**: call the Workflow tool — independent diagnosis fan-out, fix, adversarial verify. This rung spends Fable tokens freely; it is justified exactly because two worker passes and an xhigh pass already failed. (User standing-approved this rung 2026-07-16.)
+If the same defect survives two Hard worker corrections, resume that writer once at `xhigh`; if it still fails, take the work back into Claude. Use independent diagnosis fan-out only for a defect that resists a single-context fix.

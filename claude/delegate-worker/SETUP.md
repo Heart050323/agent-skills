@@ -1,14 +1,23 @@
 # Worker setup
 
+Read this file only after `SKILL.md` chooses delegation.
+
 ## Codex (primary)
 
 1. Install: `brew install codex`
-2. Authenticate: `codex login` (browser OAuth with the ChatGPT account that holds the subscription) — inside Claude Code, type `! codex login`. API-key alternative: `codex login --api-key <key>` (platform.openai.com, pay-per-token).
-3. Verify: `codex exec --skip-git-repo-check "say ok"` prints a reply.
-   - "workspace is out of credits" → logged into the wrong ChatGPT workspace/account; re-run `codex login`.
+2. Authenticate: `codex login` with the ChatGPT account that holds the subscription; inside Claude Code, run `! codex login`. Use `codex login --with-api-key` for API billing.
+3. Check authentication once per host session without invoking a model:
+
+   ```bash
+   codex login status
+   ```
+
+Let the first real delegated task test credits and model availability; do not spend a separate model call on `say ok`. An authentication, credit, or unavailable-model error disqualifies Codex. A host safety, permission, or data-transfer denial blocks delegation for the task; do not use another worker to bypass it.
 
 ## Grok (fallback)
 
 1. Install: `brew install --cask grok-build`
-2. Authenticate: `grok login` (SuperGrok / X Premium+ OAuth) — inside Claude Code, `! grok login`. API-key alternative: `export XAI_API_KEY=xai-...` in `~/.zshrc` (console.x.ai, grok-4.5 $2/M in $6/M out).
-3. Verify: `grok -p "say ok" --max-turns 1` prints a reply.
+2. Authenticate: `grok login`; inside Claude Code, run `! grok login`. Alternatively set `XAI_API_KEY` for API billing.
+3. Probe: `grok -p "say ok" --max-turns 1`.
+
+Use Grok only when the Codex check or first real task fails for authentication, credit, or model availability. Invocation and permission details are in [GROK.md](GROK.md).

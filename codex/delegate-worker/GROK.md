@@ -1,6 +1,6 @@
 # Grok fallback
 
-Used only when the Codex probe fails (see SKILL.md Gate).
+Use only when the Codex login check or first real task fails for authentication, credit, or model availability. Never use Grok to bypass a host safety, permission, or data-transfer denial.
 
 ## Run
 
