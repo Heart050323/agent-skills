@@ -28,6 +28,14 @@
 - https://nipponia-chichibu.jp/ : 客室・体験・アクセス・お知らせの情報分離
 - https://reserve.nipponia.or.jp/ : 地域体験を宿泊動機に変換する考え方
 - https://www.kominka-tarumizu.com/ : 小規模宿で固有体験を簡潔に伝える考え方
+- https://nonoie.jp/ : 朝→昼→夜→食事の「1日の時間軸」でセクションを構成し、滞在を想像させてから施設説明に入る流れ
+- https://ki-e-to.jp/ : 明るい背景・余白・黒タイポの端正なトーン。客室詳細内に予約導線を埋め込む設計
+- https://amakusa-tayuta.com/ : 食材の固有名詞（伊勢海老、地ウニ等）で地域を語り、滞在を時間経験として定義する方法
+- https://www.kamejikan.com/ : 建物の来歴の数字化（築年・開業年）と「海まで歩いて3分」のような距離感の情緒的表現
+- https://yuien.life/ : 「暮らすように泊まる」ポジショニングで過ごし方を先に見せ、想定客を自動選別する設計
+- https://loof-inn.com/ : 部屋情報でなく「何ができるか」で構造化する体験カテゴリー化と、複数予約導線
+
+宿のテイストに近い参考を追加で探す場合は、SANKOU!（https://sankoudesign.com/category/hotel/）、Web Design Clip（https://webdesignclip.com/category/hotel/）、MUUUUU.ORG（https://muuuuu.org/category/industry/trip）の宿泊カテゴリを使う。
 
 ## 批評的設計判断
 
