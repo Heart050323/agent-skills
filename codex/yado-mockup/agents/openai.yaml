@@ -1,0 +1,4 @@
+interface:
+  display_name: 宿モックアップ3案生成
+  short_description: 小規模宿の提案用公式サイトモックアップを3案生成する
+  default_prompt: $yado-mockup 対象宿の一次情報と「宿の特徴やテイスト（人間の方針）」ブロックを以下に貼る
