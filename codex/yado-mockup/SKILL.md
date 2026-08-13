@@ -58,11 +58,14 @@ requirements.md の「デザイン要件（宿の品格）」は全案共通の�
 - 各案を `mockups/<宿のスラッグ>/an1/index.html`（an2・an3 も同様）として、単体でブラウザに開ける完全なHTMLに実装する。出力先の基点は `ホテル広告事業/` ディレクトリ、見つからなければカレント直下。
 - 完了条件: 3つの index.html がそれぞれ requirements.md の必須情報設計8セクションと実装要件を満たし、実写素材が意図をもって配置され、かつ目に見える全文章が「オーナーがお客さんの前でそのまま口にできる」言葉で、内部向け注記を含まない。省略・「以下同様」は不可。
 
-### 6. 解説資料
+### 6. PDF化と解説資料
 
-requirements.md「解説資料（proposal-guide）」に従い、3案を解説するオーナー向け資料を `mockups/<宿スラッグ>/proposal-guide.pdf` に作る（3案の狙い・差し替え指示・カスタマイズ案・事実確認リスト・画像出所）。
+オーナーへの提示はPDFが基本（HTMLは商談の場で実際にスクロールして見せる用）。
 
-完了条件: PDF（またはやむを得ない場合はHTML）が存在し、事実確認リストがページ上の全ての仮表示・公開情報由来の記述をカバーしている。
+- **各案のPDF**: 各 index.html を headless Chrome（`--headless=new --virtual-time-budget=8000 --no-pdf-header-footer --print-to-pdf=...`）で `mockups/<宿スラッグ>/an1.pdf`（an2・an3 も同様）に変換する。変換後、先頭数ページを開いて白紙セクション・画像欠けが無いことを確認する（印刷用CSSは実装要件参照）。
+- **解説資料**: requirements.md「解説資料（proposal-guide）」に従い、`mockups/<宿スラッグ>/proposal-guide.pdf` を作る（3案の狙い・差し替え指示・カスタマイズ案・事実確認リスト・画像出所）。
+
+完了条件: an1〜an3.pdf と proposal-guide.pdf が存在し、各案PDFに白紙・欠けが無く、事実確認リストがページ上の全ての仮表示・公開情報由来の記述をカバーしている。
 
 ### 7. 納品
 
@@ -71,5 +74,5 @@ requirements.md「解説資料（proposal-guide）」に従い、3案を解説�
 1. 批評的設計判断（手順2の内容）
 2. トンマナ3候補（候補名・由来・配色）と選んだ正解ラベル
 3. 3案の比較表: 案名・トンマナ候補・構成とレイアウトの違い・向くオーナー像
-4. 各 index.html と proposal-guide.pdf のパス
+4. 各 index.html・an1〜an3.pdf・proposal-guide.pdf のパス
 5. requirements.md 末尾の「公開前に人間が確認する項目」チェックリスト
