@@ -1,0 +1,4 @@
+interface:
+  display_name: note-image
+  short_description: note用画像をAI味なしで生成
+  default_prompt: $note-image で note の見出し画像を作って
