@@ -1,6 +1,6 @@
 ---
 name: token-efficiency
-description: Apply token-frugal tool habits — filter before reading, delegate broad exploration, transform big files with bash. Use at the start of any task that reads files, runs commands, or explores a codebase, and when the user mentions token cost.
+description: "Reduce unnecessary context and tool-output volume when processing large files or logs, exploring a broad codebase, or investigating excessive token use. Preserve evidence needed for correctness; ordinary small tasks do not need this workflow."
 version: 2.2.0
 ---
 
@@ -8,13 +8,9 @@ version: 2.2.0
 
 Default to frugal unless the user explicitly asks for full contents or verbose output. Every rule below is one move: **look at the smallest slice that answers the question.**
 
-## Session length — the silent burner
+## Diagnose overhead
 
-Context re-reads dominate long-session spend: every turn re-reads the whole conversation, so a days-long session costs orders of magnitude more than its output suggests (measured 2026-07-18: one multi-day session = 85% of all Fable cache traffic). When the current topic closes, tell the user a fresh session is cheaper — memory files carry the continuity.
-
-## Writing code — the biggest lever
-
-Your own generated code is the most expensive token stream there is. Be the **lazy senior**: for any implementation beyond a small edit, fire the `delegate-worker` skill — write the spec, let the worker CLI (Codex/Grok) write the code, and spend your tokens only on the spec and the diff review. Reading rules below trim the input side; this rule cuts the output side, which is where most of the spend lives.
+Use available usage measurements to distinguish repeated input, generated output, tool output, cache behavior, and retries. A long session or large output is a lead to investigate, not proof of a particular cost share. Preserve needed continuity; do not promise that restarting or delegating is cheaper without a relevant comparison.
 
 ## Reading
 
@@ -25,7 +21,7 @@ Your own generated code is the most expensive token stream there is. Be the **la
 
 ## Exploring
 
-- Broad multi-file questions ("how does X work here?") → delegate to an Explore subagent and keep only its conclusion, instead of reading files into your own context.
+- Broad multi-file questions ("how does X work here?") → search the relevant symbols and boundaries first. Consider authorized delegation only when its reduced context load outweighs coordination and verification costs.
 - Codebase overview: structure first (Glob, grep for `class`/`def`/exports), then read only the sections that matter.
 
 ## Transforming
@@ -46,4 +42,4 @@ Ignore all of the above when the user asks for full output, when filtered output
 
 For detailed bash patterns (safe globs, macOS/Linux sed differences, notebook manipulation), see [strategies.md](strategies.md).
 
-The `adaptive-effort` skill decides which model/effort tier runs the work; this skill decides how few tokens the work itself consumes.
+Use `adaptive-effort` for a requested cost/latency or model-setting comparison; it does not select a model for every task.

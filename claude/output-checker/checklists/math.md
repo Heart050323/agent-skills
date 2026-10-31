@@ -9,4 +9,4 @@ Labels: 🔴 ERROR · 🟡 ASSUMPTION · 🔵 RIGOR (severity scale in SKILL.md)
 5. **Units & dimensions** — consistent throughout?
 6. **Final answer** — does it make intuitive sense? Sanity-check with rough estimation.
 
-If the math is correct, confirm: "✅ Derivation verified — all steps valid."
+State which calculations and derivation steps were checked, and any unresolved assumptions. Do not claim every step was verified when the review sampled only part of the derivation.

@@ -1,31 +1,12 @@
-# --autofix — Self-Correction Loop (自己修正ループ)
+# Bounded correction loop
 
-Triggered when ARGUMENTS contain `--autofix` or the caller requests self-correction. Instead of only reporting, run this loop.
+Use only when fixes or self-correction are requested. This is the shared protocol for output-checker --autofix and output-check-fix-loop.
 
-## Loop protocol
+1. Review the requested scope using SKILL.md. Separate confirmed findings from missing evidence and optional suggestions.
+2. Fix supported 🔴/🟡 findings with the smallest change that preserves the intended behavior. Do not change content merely to eliminate an uncertainty. Leave optional suggestions alone unless requested.
+3. Recheck each fix and affected behavior, including plausible regressions. Reuse still-valid evidence for unaffected areas. Perform a final coverage check against the original request; do not repeatedly run unrelated suites merely to make the report green.
+4. Stop when required checks pass and no supported defects remain, or after **3 correction rounds**. Stop earlier on repeated failure without new evidence, oscillation, or when all remaining work is blocked. A blocked item does not stop independent fixes.
 
-1. **Review** — run the normal Step 1–4 review. Collect all 🔴 and 🟡 findings.
-2. **Fix** — for each 🔴/🟡: apply the fix directly with the **Edit** tool, and log `✏️ FIXED | {location} | {description}`.
-3. **Re-review** — re-read the modified file(s) and run the review again from scratch. If new 🔴/🟡 appear (including regressions), return to step 2. Cap at **3 iterations** to prevent infinite loops.
-4. **Final report**:
+A small, verified architecture fix may be appropriate; the category name alone is not a blocker. A broad redesign or change to product intent outside the request remains a proposal. Keep a log of changes and the checks that verify them.
 
-   ```
-   ══════════════════════════════════════
-   Self-Correction Loop: {N} iteration(s)
-   ══════════════════════════════════════
-   ✏️ FIXED     | {count} issues fixed
-   🔴 REMAINING | {count} unresolved critical (if any)
-   🟡 REMAINING | {count} unresolved warnings (if any)
-   ✅ RESULT    | PASS / FAIL
-   ══════════════════════════════════════
-   ```
-
-   - **PASS**: zero 🔴 and zero 🟡 remaining.
-   - **FAIL**: at least one 🔴 or 🟡 remains after 3 iterations.
-
-## Rules for the fix step
-
-- Only fix what is clearly wrong. Never apply 🔵 changes — they're informational.
-- Preserve the author's intent and style. Minimal diffs only.
-- If a fix needs architectural change beyond a simple edit (e.g. rewriting a class), do NOT auto-fix — report it as 🔴 REMAINING with what needs to change.
-- ARCHITECTURE findings (ARCH VIOLATION / ARCH RISK) are structural — always report as REMAINING, never auto-fix.
+Final report: rounds used; fixes; evidence; unresolved defects; unverified checks; and why the loop stopped. Use PASS / ISSUES FOUND / INCOMPLETE / ISSUES FOUND + INCOMPLETE as defined in SKILL.md. Never turn missing test access into PASS, and never count lack of access itself as a proven code defect.

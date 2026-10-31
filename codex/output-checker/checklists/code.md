@@ -9,4 +9,4 @@ Labels: 🔴 CRITICAL · 🟡 WARNING · 🔵 STYLE (severity scale in SKILL.md)
 5. **Readability** — variable names, comments, unnecessary complexity.
 6. **Security** — hardcoded secrets, injection, unsafe `eval`?
 
-If the code is clean, confirm: "✅ Logic verified — no issues found." Do not invent problems.
+If no defect is found, report no issues found in the checked scope and name the checks performed. Distinguish execution from static inspection; unavailable runtime checks remain unverified.
