@@ -268,14 +268,7 @@ Tactical rules that serve these:
 
 ## Motion reference studies
 
-When the brief needs a concrete motion reference, use [Takayu's Motion Reference](https://motion-reference.takayustudio.jp/) to compare candidates by purpose, feel, easing, and speed. This is an independent demo library, not Apple guidance.
-
-- Record the selected detail URL, trigger, moving properties, and final readable state. Inspect the demo at normal speed and with frame stepping; use its A/B comparison to change one parameter at a time.
-- Treat displayed duration/easing as demo metadata, not production defaults. The library distinguishes the outer timeline curve from actual object velocity, and its CSS/WAAPI/GSAP examples can be templates rather than exact reproductions of the seek(t) demo. Verify the implementation and adapt timing to the real interaction.
-- For [FLIP reordering](https://motion-reference.takayustudio.jp/#motion=flip-reorder), measure the same items before and after the DOM update, invert the position delta with a transform, then animate toward the final layout. Keep item identity, focus, and reading order coherent; avoid applying both a layout move and its inverse twice.
-- Compare the normal and reduced-motion outcomes: both must expose the same final content and state. A reference's attractive autoplay is not evidence that it responds correctly to real input or interruption.
-
-Source reviewed 2026-10-14: the library's FLIP detail, playback controls, implementation caveats, and comparison lab. Use its demonstrations as design evidence; do not infer permission to reuse code without checking the applicable license.
+When the brief needs concrete examples to compare, use [reference-driven-ui](../reference-driven-ui/SKILL.md) and its [Takayu motion guide](../reference-driven-ui/references/motion.md). That workflow covers source selection, frame/A-B comparison, implementation caveats, and reuse terms. Independent demo libraries are not Apple guidance.
 
 ## Quick Reference
 

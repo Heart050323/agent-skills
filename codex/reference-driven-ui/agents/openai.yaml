@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reference-driven UI"
+  short_description: "Find and adapt UI and motion references"
+  default_prompt: "Use $reference-driven-ui to select suitable UI and motion references and integrate them into this project."

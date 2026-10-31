@@ -27,6 +27,8 @@ Choose visual density, amount of motion, and layout variation to suit the conten
 
 ## Conditional references
 
+- Selecting a concrete UI/motion example or implementing a supplied reference: use [reference-driven-ui](../reference-driven-ui/SKILL.md), then return to this page-level brief.
+
 - Choosing a named design system or checking an API: use [official sources](references/official-sources.md), then read the current documentation for the selected system. Do not load or install every system in the list.
 - A brief that needs scroll-linked choreography: read [motion patterns](references/motion-patterns.md). Choose a pattern because it serves the page, not to satisfy an animation quota.
 
