@@ -13,6 +13,17 @@ When applied to an existing project, follow this sequence:
 2. **Diagnose** — Run through the audit below. List every generic pattern, weak point, and missing state you find.
 3. **Fix** — Apply targeted upgrades working with the existing stack. Do not rewrite from scratch. Improve what's there.
 
+## Adapting a reference component
+
+When a requested upgrade benefits from an existing interactive example, identify the exact insertion point or component being replaced before porting it. Preserve that component's actions, data, and states while changing its presentation.
+
+- Inspect the example's working HTML/CSS/JS and the host framework, styling, and theme setup. Port it into the host's component lifecycle; standalone script initialization is not automatically suitable for a framework component.
+- Map reference color tokens to the project's semantic theme variables instead of adding a second palette. Keep selectors scoped to the component and verify it in every supported theme.
+- Exercise pointer, touch, keyboard, visible focus, and reduced-motion behavior in the integrated component. A source library's accessibility claim is a starting point, not a substitute for checking the port.
+- Record the source element URL, relevant source revision when available, and retained license notices. Report what changed and what could not be verified.
+
+[Lucian UX/UI Prompt](https://github.com/Seokwoooo/lucian-uxui-prompt) is one optional source of interactive examples. Its README documents per-element links, scoped selectors, and mapping `--ux-*` tokens into a host theme. The [MIT license](https://github.com/Seokwoooo/lucian-uxui-prompt/blob/main/LICENSE) requires preservation of the copyright and permission notice when copying covered code; retain the gallery's source credit as well. Reviewed 2026-10-14 at repository revision `42396145b375a17712fd738ca0e1d977556c0b73`. Use only a component that serves the brief; this reference does not require installing its separate skill or executing its build scripts.
+
 ## Design Audit
 
 ### Typography
