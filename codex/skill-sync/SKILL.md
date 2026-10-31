@@ -1,63 +1,29 @@
 ---
 name: skill-sync
-description: Port skills between Codex (~/.codex/skills) and Claude (~/.claude/skills) so both agents share one skill set. Use after creating, editing, or installing any skill, and when the user asks to sync or share skills across agents.
-version: 1.0.0
+description: Synchronize requested personal skills between Codex and Claude while preserving host-specific controls and unrelated edits; publish only when GitHub updates are authorized.
 metadata:
   short-description: Sync skills between Codex and Claude
 ---
 
 # Skill Sync
 
-Every skill lives in both `~/.codex/skills/<name>/` and `~/.claude/skills/<name>/`. The two copies are **ports, not mirrors**: same behavior, each phrased in its host's dialect. After any skill is created, edited, or installed on one side, port it to the other before finishing the task.
+Maintain the requested skills in the existing `~/agent-skills` repository: `codex/` and `claude/` are host-specific ports. Resolve the actual repository and install links before writing; do not assume another machine has this layout.
 
-## Porting procedure
+## Reconcile a bounded change
 
-1. Identify the fresher side by SKILL.md modification time (`stat -f %Sm` on macOS, `stat -c %y` on Linux); it is the source. Never overwrite newer content with older.
-2. Copy supporting files (checklists, glossaries, reference `.md`) as-is; they are dialect-neutral.
-   - If the skill folder is a symlink (`npx skills` installs link into `~/.agents/skills/`), materialize it first — replace the link with a dereferenced copy (`rm` + `rsync -a target/ skill/`) so the repo never carries machine-local links.
-3. Rewrite the SKILL.md frontmatter into the target dialect (table below).
-4. Translate tool references in the body (table below). Leave everything else — wording, structure, language — unchanged.
-5. Preserve target-side extras that have no source counterpart: `agents/openai.yaml`, 「Codex 向けメモ」 sections. Drop one only if the new body contradicts it.
-6. Done when: the target SKILL.md carries target-dialect frontmatter, a grep for the source column's tool names returns nothing in the target body, and every supporting file on the source side exists on the target.
-7. Commit and push the skills repo (Propagation below).
+1. Read repository instructions, `git status`, the requested source and destination, and their diff. Record or back up the exact starting content. Preserve unrelated staged, unstaged, and untracked work.
+2. Determine the source from the requested change, Git history, and content. Modification time is not evidence that one side is correct. If both contain unique changes, merge those changes; ask only about a substantive unresolved conflict.
+3. Port the workflow and referenced resources. Preserve host-specific invocation policy, model/tool controls, and UI metadata. Tool-name substitution must preserve behavior: direct execution does not become mandatory delegation. Do not copy `.system/` or modify the host's bundled creator.
+4. Check callers before merging or removing a skill. Update references and discovery descriptions, validate both ports, and inspect the resulting diff. Keep recoverable copies outside discovery paths when removing duplicate local installations. Inspect symlink targets before replacing anything.
 
-## Propagation
+## Publication
 
-Both trees live in one git repo, `~/agent-skills` (github.com/Heart050323/agent-skills): `codex/` and `claude/` are linked to `~/.codex/skills` and `~/.claude/skills` (symlink on macOS, junction on Windows). Pull before editing any skill; after porting, commit and push:
+Local editing and cross-host synchronization do not themselves authorize publication. Use authorization already present in the conversation; do not ask again when GitHub updates are already requested.
 
-```
-git -C ~/agent-skills pull && git -C ~/agent-skills add -A && git -C ~/agent-skills commit -m "skills: <what changed>" && git -C ~/agent-skills push
-```
+Before an authorized push, fetch and compare the remote branch. Fast-forward only if it preserves local work. Resolve divergence from content and history, never timestamps or a force push. Stage explicit reviewed paths, including intended deletions, and inspect the staged diff so unrelated changes cannot enter the commit. Commit and push to the intended remote and branch; verify the remote commit before reporting success.
 
-Other devices pick the change up with `git -C ~/agent-skills pull`. On a merge conflict, the fresher-side rule (step 1) decides.
+## Discovery and portability
 
-## Frontmatter dialects
+Check `~/.agents/skills` and the configured personal skill directory for duplicate names. Keep a single maintained installation for each name; do not leave an obsolete copy discoverable. Preserve project-specific skills unless the request includes them.
 
-| Claude | Codex |
-|---|---|
-| `name`, `description`, `argument-hint` | keep verbatim |
-| `disable-model-invocation: true` | drop (no equivalent) |
-| `allowed-tools: [...]` | drop |
-| `model: opus` | drop |
-| — | add `metadata:` → `short-description: <≤6 words>` |
-
-Codex skills may also carry `agents/openai.yaml` (`interface:` with `display_name`, `short_description`, `default_prompt` using `$skill-name`). Create it for skills the user invokes by name; skip it for pure reference skills.
-
-## Tool-reference translation (Codex → Claude)
-
-| Codex | Claude |
-|---|---|
-| ask the user in plain text | `AskUserQuestion` |
-| do it directly (`rg`, shell) | `Task` / `Agent` / `Explore` subagent |
-| `rg` / `rg --files` | `Grep` / `Glob` tools |
-| read/edit/write the file (plain phrasing) | `Read` / `Edit` / `Write` tools |
-| update the plan | `TodoWrite` / `TaskCreate` |
-| write a local HTML file and report its path | `Artifact` |
-| fetch/search the web (plain phrasing) | `WebFetch` / `WebSearch` |
-| `$skill-name` | `/skill-name` invocation |
-
-Claude → Codex runs the table right-to-left, replacing named Claude tools with their Codex equivalents (e.g. `AskUserQuestion` becomes asking the user in plain text).
-
-## Scope
-
-Global skills only. `~/.codex/skills/.system/` is Codex-internal — never port into or out of it. Project-level skills (`.claude/skills/` inside a repo) sync only when the user asks.
+For Codex, read the installed standard creator and its metadata reference before changing `agents/openai.yaml`. Keep existing automatic-selection policy unless the user requests a change. For Claude, preserve its supported frontmatter and use current host documentation when behavior differs. Do not assume a field in one host has an identical effect in the other.

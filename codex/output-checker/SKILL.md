@@ -1,6 +1,6 @@
 ---
 name: output-checker
-description: "Review a specified artifact or change for correctness and quality when a second opinion or quality check is needed. Report evidence-backed findings and unverified checks; edit only when fixes are requested."
+description: Review a specified artifact or change with evidence-backed findings. When the user also requests fixes, run bounded correction and recheck affected behavior; distinguish defects from unverified checks.
 metadata:
   short-description: Review generated outputs critically
 ---
@@ -43,4 +43,4 @@ Report what was reviewed, findings, checks performed, and material limits. Say â
 
 ## Requested fixes
 
-Review alone does not imply edits. When the user requests fixes or `--autofix`, follow [autofix.md](autofix.md). The separate output-check-fix-loop skill uses the same protocol.
+Review alone does not imply edits. When the user requests fixes or `--autofix`, follow [autofix.md](autofix.md).

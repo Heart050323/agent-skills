@@ -433,7 +433,7 @@ class BibTeXVerifier:
                 "(Use --online-check to export list)"
             )
             lines.append(
-                "[TIP] AI-generated citations have ~40% error rate. "
+                "[TIP] Format checks do not establish citation existence or claim support. "
                 "Verify entries without DOI/URL using Semantic Scholar API or CrossRef. "
                 "See references/citations/verification.md for verification workflow."
             )

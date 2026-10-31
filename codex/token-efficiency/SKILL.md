@@ -1,6 +1,6 @@
 ---
 name: token-efficiency
-description: "Reduce unnecessary context and tool-output volume when processing large files or logs, exploring a broad codebase, or investigating excessive token use. Preserve evidence needed for correctness; ordinary small tasks do not need this workflow."
+description: Reduce unnecessary context and tool output for large files, logs, or broad exploration; compare model/effort settings when the user asks about cost or latency. Preserve correctness evidence.
 metadata:
   short-description: Minimize tokens reading/writing files
 ---
@@ -39,8 +39,4 @@ Ignore all of the above when the user asks for full output, when filtered output
 
 For detailed bash patterns (safe globs, macOS/Linux sed differences, notebook manipulation), see [strategies.md](strategies.md).
 
-Use `$adaptive-effort` for a requested cost/latency or model-setting comparison; it does not select a model for every task.
-
-## Codex 向けメモ
-
-claude側 v2.1.0 (2026-07-16) の「Writing code — the biggest lever」節(実装を delegate-worker 経由で Codex/Grok に委譲する lazy senior 規則)は、Fable=オーケストレーター構成の専用規則のため、このポートには意図的に含めない — その構成では Codex 自身がワーカー側。
+For a requested cost, latency, or model-setting comparison, read [model/effort comparisons](references/model-effort.md). Ordinary tasks do not need a model-selection preflight.

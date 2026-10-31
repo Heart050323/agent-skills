@@ -1,23 +1,7 @@
-# Worker setup
+# Check the existing worker
 
-Read this file only after `SKILL.md` chooses delegation.
+Check whether the requested CLI is installed, then read its local `--help` and authentication-status command (for Codex: `codex exec --help` and `codex login status`). Do not run a paid model probe merely to test availability; the first authorized task can establish model access.
 
-## Codex (primary)
+If installation or login is needed, follow the host's supported installation/secure-login flow and approval requirements. Never request API keys or passwords in ordinary chat. Do not install a fallback provider automatically or change security settings to make headless execution work.
 
-1. Install: `brew install codex`
-2. Authenticate: `codex login` with the ChatGPT account that holds the subscription; inside Claude Code, run `! codex login`. Use `codex login --with-api-key` for API billing.
-3. Check authentication once per host session without invoking a model:
-
-   ```bash
-   codex login status
-   ```
-
-Let the first real delegated task test credits and model availability; do not spend a separate model call on `say ok`. An authentication, credit, or unavailable-model error disqualifies Codex. A host safety, permission, or data-transfer denial blocks delegation for the task; do not use another worker to bypass it.
-
-## Grok (fallback)
-
-1. Install: `brew install --cask grok-build`
-2. Authenticate: `grok login`; inside Claude Code, run `! grok login`. Alternatively set `XAI_API_KEY` for API billing.
-3. Probe: `grok -p "say ok" --max-turns 1`.
-
-Use Grok only when the Codex check or first real task fails for authentication, credit, or model availability. Invocation and permission details are in [GROK.md](GROK.md).
+Use supported controls from the installed version. Preserve the user's configured model unless a model change is requested or otherwise authorized. An unavailable worker does not prevent independent local work. Report blocked action, target, reason, and whether its outcome is known or uncertain; inspect an uncertain result before retrying.

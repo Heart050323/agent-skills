@@ -1,10 +1,3 @@
----
-name: adaptive-effort
-description: "Compare model or reasoning-effort options for a concrete workload when the user asks to reduce cost or latency, or evaluate a settings tradeoff. Do not use as a preflight for ordinary tasks."
-metadata:
-  short-description: Match effort to task difficulty
----
-
 # Adaptive Effort
 
 Use for a concrete cost, latency, or model/effort selection decision. Ordinary tasks do not need a preliminary tier classification or routine advice to switch models.

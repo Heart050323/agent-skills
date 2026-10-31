@@ -1,9 +1,9 @@
 ---
 name: latex-paper-ja
 description: 日本語LaTeX論文(卒論・修論・和文誌・学会原稿)の執筆補助。「日本語の論文を直して」「卒論のtexを見て」「和文論文を校正して」など、日本語の.texに関する依頼で使う。英語論文は latex-paper-en を使う。
-argument-hint: "[main.tex] [--section 節名]"
 metadata:
   short-description: 日本語LaTeX論文アシスタント
+  argument-hint: '[main.tex] [--section 節名]'
 ---
 
 # 日本語LaTeX論文アシスタント

@@ -48,6 +48,10 @@ if exist %USERPROFILE%\.codex\skills.bak\.system xcopy /E /I %USERPROFILE%\.code
 ## 日々の運用
 
 - 最新を取り込む: `git -C ~/agent-skills pull`
-- スキルを作成・編集したら(オーナーのみ): `skill-sync` スキルが Claude/Codex 両方言への移植と commit & push まで行う(手動なら `git add -A && git commit && git push`)
+- スキルを作成・編集したら: `skill-sync` で必要な変更を両ホストへ移植し検証する。公開を依頼済みの場合だけ、対象パスを明示してステージし、差分を確認して commit / push する。無関係な変更を含めない。
 - `codex/.system/` は Codex 内部用で git 管理外(.gitignore 済み)。リポジトリには含まれない
 - スキルを1個だけ試したい場合は `npx skills add Heart050323/agent-skills@<スキル名>` でも入れられる
+
+## 重複インストールの整理
+
+`~/.agents/skills` に同名の旧コピーがある場合は、内容とリンク先を比較する。このリポジトリを正本にするなら、独自変更を保存・統合したうえで旧コピーを探索対象外へ退避する。同名のスキルは自動で内容が統合されない。標準の `.system/` は移動・削除しない。

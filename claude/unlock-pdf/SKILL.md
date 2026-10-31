@@ -1,43 +1,22 @@
 ---
 name: unlock-pdf
 description: パスワード付きPDFのロックを解除する。PDFの鍵を外す、PDFのパスワードを解除する、と言われたときに使う。
-argument-hint: "[PDFファイルパス] [パスワード(任意)]"
+argument-hint: "[PDFファイルパス]"
 ---
 
-# PDF パスワード解除スキル
+# PDFのロック解除
 
-## 手順
+指定されたPDFを、元ファイルを残して別ファイルへ解除する。固定の既定パスワードを持たない。パスワードが必要なら、利用可能な秘密入力・ローカルでの非表示入力など、対応した安全な受け渡しを使う。通常のチャットへの貼り付けを求めない。
 
-1. **引数の解析**: 引数からPDFファイルパスとパスワード（任意）を取得する。引数がなければ `AskUserQuestion` でPDFファイルパスを確認する。
+1. 入力と出力先、既存ツールを確認する。出力名は通常 `<stem>_unlocked.pdf` とし、既存ファイルを上書きしない。
+2. 既存のqpdfを優先する。`qpdf --help=--password-file` 等で実際のバージョンの対応を確認する。秘密値をコマンド引数・ログ・履歴・リポジトリへ埋め込まない。利用者が安全に用意したアクセス制限付きパスワードファイルがあれば、そのパスのみを渡す。
 
-2. **ファイル存在確認**: 指定されたPDFファイルが存在するか確認する。存在しなければエラーを報告する。
-
-3. **出力ファイル名の決定**: 元のファイル名の拡張子の前に `_unlocked` を付与する。
-   - 例: `document.pdf` → `document_unlocked.pdf`
-
-4. **パスワードなしで `gs` を試行**（オーナーパスワードのみの場合はこれで解除できる）:
    ```bash
-   gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sOutputFile=<output> <input>
+   qpdf --password-file=<protected-password-file> --decrypt <input.pdf> <new-output.pdf>
    ```
 
-5. **失敗した場合、パスワード付きで再試行**:
-   - 引数でパスワードが渡されていればそれを使う
-   - パスワードがなければデフォルトパスワード `EcoEE2026` を試す
-   - デフォルトパスワードも失敗した場合は `AskUserQuestion` でユーザーに聞く
-   ```bash
-   gs -q -dNOPAUSE -dBATCH -sDEVICE=pdfwrite -sPDFPassword=<password> -sOutputFile=<output> <input>
-   ```
+   パスワードが不要なら `--password-file` を省く。`--password-file=-` は端末入力が表示される場合があるため、安全な非表示入力の代わりだと考えない。解除に失敗したら、推測したパスワードを繰り返し試さず、エラーと必要な入力を確認する。
+3. 出力を秘密なしで開けること、ページ数、文字・画像・注釈・フォームなど依頼に関係する内容の保持を確認する。`qpdf --check` は構造検査であり、見た目や署名の保持の証明ではない。見た目が重要なら代表ページを表示して比較する。
+4. 出力先と実施した検証を報告する。ツールがなければ必要な導入を説明し、環境の承認手順に従う。承認なしのインストールや、内容を書き換える別エンジンへの自動切替はしない。
 
-6. **`gs` が利用できない場合のフォールバック**:
-   - `qpdf` を試す:
-     ```bash
-     qpdf --decrypt --password=<password> <input> <output>
-     ```
-   - `qpdf` もなければ `pikepdf`（Python）を試す:
-     ```python
-     import pikepdf
-     pdf = pikepdf.open("<input>", password="<password>")
-     pdf.save("<output>")
-     ```
-
-7. **結果報告**: 成功した場合は出力ファイルパスを報告。失敗した場合はエラー内容を報告する。
+参照: [qpdfの入力・パスワード・終了コード](https://qpdf.readthedocs.io/en/stable/cli.html)。標準入力の扱いと検査範囲は実行前に確認する。

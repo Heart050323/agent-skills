@@ -1,33 +1,28 @@
 ---
 name: latex-paper-en
-description: English LaTeX assistant for existing .tex journal or conference papers. Use for compile repair, venue formatting, bibliography/citation checks, section writing, logic, related work, tables, pseudocode, de-AI polish, translation, adaptation, and submission readiness; use latex-thesis-zh for Chinese theses and paper-audit for critique.
-when_to_use: >-
-  Trigger on prompts like "fix my LaTeX", "proofread my IEEE paper", "rewrite related work",
-  "find the research gap", "format citations", "make a three-line table", "write pseudocode",
-  "section rewrite plan", "claim-evidence map", "换投", or requests about an English .tex manuscript.
+description: 'Assist with an existing English LaTeX paper: targeted build repair, formatting, bibliography checks, and academic revision. Select only the modules relevant to the requested change.'
+when_to_use: Trigger on prompts like "fix my LaTeX", "proofread my IEEE paper", "rewrite related work", "find the research gap", "format citations", "make a three-line table", "write pseudocode", "section rewrite plan", "claim-evidence map", "换投", or requests about an English .tex manuscript.
 metadata:
   category: academic-writing
   tags:
-    [
-      latex,
-      paper,
-      english,
-      ieee,
-      acm,
-      springer,
-      neurips,
-      icml,
-      compilation,
-      grammar,
-      bibliography,
-      figures,
-      pseudocode,
-      algorithmicx,
-      algpseudocodex,
-    ]
-  version: "5.3.0"
-  last_updated: "2026-07-09"
-argument-hint: "[main.tex] [--section SECTION] [--module MODULE]"
+  - latex
+  - paper
+  - english
+  - ieee
+  - acm
+  - springer
+  - neurips
+  - icml
+  - compilation
+  - grammar
+  - bibliography
+  - figures
+  - pseudocode
+  - algorithmicx
+  - algpseudocodex
+  version: 5.3.0
+  last_updated: '2026-07-09'
+argument-hint: '[main.tex] [--section SECTION] [--module MODULE]'
 allowed-tools: Read, Glob, Grep, Bash(uv *)
 ---
 
@@ -47,7 +42,7 @@ Use when the user has an existing English `.tex` paper project and wants: compil
 
 ## Do Not Use
 
-Not for: drafting a paper from scratch; literature research without a paper project; Chinese thesis structure/template work; Typst-first workflows; DOCX/PDF conversion without LaTeX source; multi-perspective review or scoring/gate decisions (use `paper-audit`); standalone algorithm design.
+Not for: drafting a paper from scratch; literature research without a paper project; Chinese thesis structure/template work; Typst-first workflows; DOCX/PDF conversion without LaTeX source; multi-perspective review or scoring/gate decisions (use a separate review workflow if available and requested); standalone algorithm design.
 
 ## Module Router
 
@@ -128,7 +123,5 @@ Read only the file matching the active module.
 - “Compile my IEEE paper and tell me why `main.tex` still fails after BibTeX.”
 - “Rewrite the related work so it reads like a synthesis instead of a paper-by-paper list, but keep all citation anchors intact.”
 - “Review the experiments section for overclaiming, missing ablations, and weak baseline comparisons.”
-
-See `examples/` for complete request-to-command walkthroughs.
 
 See `examples/` for complete request-to-command walkthroughs.

@@ -1,6 +1,6 @@
 ---
 name: apple-design
-description: Apple's approach to interface design and fluid, physical motion, translated for the web. Use when building or reviewing gesture-driven UI, spring animations, drag/swipe/sheet interactions, momentum and interruptible transitions, translucent materials and depth, typography (optical sizing, tracking, leading), reduced-motion, or the design foundations (feedback, spatial consistency, restraint) behind Apple-style interfaces.
+description: Design or review Apple-inspired UI or direct-manipulation motion, including interruptible gestures and spring behavior, when that direction or interaction is requested.
 ---
 
 # Apple Design
@@ -8,6 +8,10 @@ description: Apple's approach to interface design and fluid, physical motion, tr
 How Apple builds interfaces that stop feeling like a computer and start feeling like an extension of you. This knowledge comes from Apple's WWDC design talks — chiefly *Designing Fluid Interfaces* (WWDC 2018) — distilled and translated into the web platform (CSS, Pointer Events, `requestAnimationFrame`, spring libraries like Motion/Framer Motion).
 
 The through-line: **an interface feels alive when motion starts from the current on-screen value, inherits the user's velocity, projects momentum forward, and can be grabbed and reversed at any instant.** Springs are the tool that makes all of this natural, because they are inherently interruptible and velocity-aware.
+
+## Scope
+
+Use these references for a requested Apple-inspired interface or a concrete gesture/motion problem. They are design options, not universal web requirements or an official Apple web component library. Preserve the existing brand, supported interaction methods, and accessibility needs.
 
 ## The Core Idea
 
@@ -58,7 +62,7 @@ Every animation must be interruptible and redirectable at any moment. A user mus
 
 - **Never lock out input during a transition.**
 - **Always animate from the *presentation* (current) value, never the target value.** On interrupt, read the element's live on-screen transform and start the new animation from there. Starting from the logical/target value causes a visible jump.
-- **Avoid CSS transitions and `@keyframes` for anything gesture-driven** — they can't be smoothly grabbed and reversed mid-flight. Springs animate from the current value by default, which is exactly what interruption needs.
+- For gesture-driven motion, choose an implementation that can retarget from the current presentation value and preserve velocity when needed. Springs are one option; CSS or Web Animations can suit simpler transitions. Test interruption instead of assuming a library guarantees it.
 - **When a gesture reverses, blend velocity — don't hard-cut it.** Replacing one animation with another at a reversal creates a velocity discontinuity, a "brick wall." Spring libraries that carry velocity through a re-target avoid it. (This is what iOS's *additive animations* do natively; on the web, choose a spring library that re-targets from the current velocity.)
 - **Decompose 2D motion into independent X and Y springs.** A single spring on a 2D distance desyncs when X and Y have different velocities.
 

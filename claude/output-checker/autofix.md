@@ -1,6 +1,6 @@
 # Bounded correction loop
 
-Use only when fixes or self-correction are requested. This is the shared protocol for output-checker --autofix and output-check-fix-loop.
+Use only when fixes or self-correction are requested. Use this protocol for output-checker --autofix or a request to review and fix.
 
 1. Review the requested scope using SKILL.md. Separate confirmed findings from missing evidence and optional suggestions.
 2. Fix supported 🔴/🟡 findings with the smallest change that preserves the intended behavior. Do not change content merely to eliminate an uncertainty. Leave optional suggestions alone unless requested.

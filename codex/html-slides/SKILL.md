@@ -1,36 +1,10 @@
 ---
 name: html-slides
 description: Create interactive HTML presentations with reveal.js — animations, transitions, code highlighting, speaker notes. Use when the user wants a web-based or interactive slide deck, a code walkthrough presentation, or says HTMLスライド/インタラクティブなプレゼン. For Markdown-sourced decks exported to PDF/PPTX, use md-slides instead.
-version: "1.0"
-author: claude-office-skills
 license: MIT
-category: presentation
-tags:
-  - html
-  - slides
-  - revealjs
-  - web
-department: All
-models:
-  recommended:
-    - claude-sonnet-4
-    - claude-opus-4
-  compatible:
-    - claude-3-5-sonnet
-    - gpt-4
-    - gpt-4o
-mcp:
-  server: office-mcp
-  tools:
-    - pptx_to_html
-capabilities:
-  - web_presentation
-  - html_slides
-languages:
-  - en
-  - zh
 metadata:
   short-description: Create reveal.js HTML presentations
+  author: claude-office-skills
 ---
 
 # HTML Slides Skill
@@ -38,6 +12,12 @@ metadata:
 ## Overview
 
 This skill enables creation of stunning HTML-based presentations using **reveal.js** - the web's most popular presentation framework. Create interactive, responsive slides with animations, code highlighting, speaker notes, and more.
+
+## Delivery checks
+
+Use the project’s existing toolchain where available. Verify installed versions and current official documentation before installing dependencies or relying on an export option. Do not assume an office MCP server exists. Follow required approval before downloading or executing a new CLI.
+
+Open the rendered deck or exported PDF to check text overflow, images, fonts, and navigation/page order. A source file alone does not establish that an export succeeded. For PPTX, verify whether the chosen exporter produces editable content or slide images and report that limitation. Preserve an editable source alongside the requested export.
 
 ## How to Use
 
