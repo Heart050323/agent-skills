@@ -1,0 +1,4 @@
+interface:
+  display_name: "Imozuru Research"
+  short_description: "Trace terms and citations to primary sources"
+  default_prompt: "$imozuruで、この分野の用語と原典をたどり、論点別に根拠を整理してください。"

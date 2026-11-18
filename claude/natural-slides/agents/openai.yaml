@@ -1,0 +1,4 @@
+interface:
+  display_name: "Natural Slides"
+  short_description: "Create diagram-led Japanese business slides"
+  default_prompt: "$natural-slidesで、この提案内容を図解中心の日本語スライドにしてください。"
