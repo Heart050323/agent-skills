@@ -1,0 +1,4 @@
+interface:
+  display_name: "yomiyasu"
+  short_description: "Refine AI-written Japanese while keeping its meaning"
+  default_prompt: "$yomiyasu でこの文章を推敲してください。"

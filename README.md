@@ -53,3 +53,11 @@ X投稿で紹介されたスキルを既存のデザイン系と比較し、役�
 | `slide-deck` | スライド制作の入口。作る前に資料の種類・判断事項・各ページの主張・色の役割・ページの強弱を決めて構成案を示し、PPTX・Marp・reveal.jsから形式を選んで作り、画像で「AIっぽさ」を点検する | 画風の指定は`natural-slides`やブランドに従う。旧`md-slides`・`html-slides`はここに統合 |
 
 例: 「$slide-deckで、このメモから経営会議用10枚の構成案を作って」「$slide-deckと$natural-slidesで提案資料を作って」「$slide-deckで勉強会用のreveal.jsスライドを作って」。
+
+## 日本語の推敲（2026-11-26追加）
+
+| スキル | 使いどころ | 既存スキルとの分担 |
+| --- | --- | --- |
+| `yomiyasu` | AIが書いた日本語を、意味と条件を保ったまま読みやすく推敲する（nanaism/yomiyasu 3.4.1をそのまま収録、検査スクリプト付き） | 名前を出して頼んだときに動く。`rewrite-human`は日本語の推敲をyomiyasuに回し、日本語以外と学術文の文体を担当。`slide-deck`はスライドの文言をyomiyasu（種類slides）で推敲 |
+
+例: 「$yomiyasu でこのメールを推敲して」「この文章のAIっぽさをなくして」（rewrite-human経由でyomiyasuの手順）。上流の更新手順は`yomiyasu/references/sources.md`。
