@@ -1,0 +1,4 @@
+interface:
+  display_name: "セッション引き継ぎ"
+  short_description: "現在の作業を短い引き継ぎファイルに保存し、新しいチャットで再開"
+  default_prompt: "$session-handoff 現在の作業を新しいチャットへ引き継ぐため、必要最小限の状態と次の一手を保存してください。"

@@ -1,0 +1,63 @@
+{
+  "slug": "kallaway-layered-hook",
+  "sources": [
+    {
+      "url": "https://build-os.com/blogs/source-analyses/kallaway-6-words-hook"
+    },
+    {
+      "url": "https://build-os.com/blogs/source-analyses/kallaway-irresistible-hooks"
+    },
+    {
+      "url": "https://videohighlight.com/v/2byPP_9F0-Q"
+    },
+    {
+      "url": "https://videohighlight.com/v/LmXpbP7dD48"
+    },
+    {
+      "url": "https://videohighlight.com/v/_Z11mjFh2zY"
+    },
+    {
+      "url": "https://you-tldr.com/transcript/xnOe8aA9Pmw"
+    }
+  ],
+  "method": "Original text written for Edge from Kallaway's public material (posts, essays, talks, interviews), paraphrased with every rule cited to a public source. Not affiliated with or endorsed by Kallaway. No paywalled or book text copied.",
+  "license": "Apache-2.0 applies to the new text only. Ideas and methods remain credited to Kallaway; no license is asserted over their original works.",
+  "copy_files": [
+    {
+      "path": "LICENSE",
+      "sha256": "d0d0b1377c7be4c0094f0a1e0a84c4bb2c4d3c2a4d1c0355eb7cfe118d3bf1f1",
+      "size_bytes": 10756
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "79f44a9fbc8f8da645207fff4f184a079e3d565bbe9591d8f9956246f40833ec",
+      "size_bytes": 6108
+    },
+    {
+      "path": "checklists/review-checklist.md",
+      "sha256": "f42b1c6cdb77fd3031ce8ab02f7099cfcf18777a2b71a29b1820a48543e5cc6f",
+      "size_bytes": 5690
+    },
+    {
+      "path": "examples/worked-examples.md",
+      "sha256": "d2b890c6412cc6c8f16be8d0cd71ddfabc431238d5b931111512e4c746f6b129",
+      "size_bytes": 7093
+    },
+    {
+      "path": "references/method.md",
+      "sha256": "a045d88e3b54e457a4cbb0ee55e6bfcf849caaaa673ad0a65b8d0630d51399c4",
+      "size_bytes": 13159
+    },
+    {
+      "path": "references/sources.md",
+      "sha256": "96b22d6ed09667f334fd13f4be96c9eaed558465edc9cbc0255b8a3da48af251",
+      "size_bytes": 3274
+    },
+    {
+      "path": "templates/output-template.md",
+      "sha256": "20387dfccd7fc7e7483a7d9f7e4b3ef5d079a9c6b1e781802b03c62086e730ab",
+      "size_bytes": 4656
+    }
+  ],
+  "copy_files_sha256": "af8cbea248828f219d30fec68b365d17c733efa3cb5d0856b5ff49ecfb6555de"
+}

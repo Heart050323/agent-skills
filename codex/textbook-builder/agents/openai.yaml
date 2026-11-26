@@ -1,0 +1,4 @@
+interface:
+  display_name: 授業資料の教科書化
+  short_description: 授業資料から自己完結した LaTeX 教科書を作る・書き直す
+  default_prompt: $textbook-builder でナレッジまとめの教科書作成を QUEUE.md の続きから進めて

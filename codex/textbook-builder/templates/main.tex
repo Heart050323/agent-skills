@@ -1,0 +1,149 @@
+% {{SUBJECT}} 教科書
+% コンパイル: latexmk  (同じフォルダの .latexmkrc で LuaLaTeX + biber を使う)
+\documentclass[a4paper,11pt,openany]{ltjsbook}
+
+% ---------------- 基本パッケージ ----------------
+\usepackage{amsmath,amssymb,amsthm,mathtools,bm}
+\usepackage[margin=24mm,headheight=14pt]{geometry}
+\usepackage{graphicx}
+\graphicspath{{figures/}}
+\usepackage{booktabs,array,multirow,tabularx,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{siunitx}
+\usepackage[hang,small,bf]{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.multipart,shapes.misc,
+  calc,fit,backgrounds,decorations.pathreplacing,matrix,trees,patterns,shadows}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{forest}
+\usepackage[siunitx,RPvoltages]{circuitikz}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable,skins,listings,theorems}
+\usepackage[style=numeric,sorting=none,backend=biber,maxbibnames=4]{biblatex}
+\IfFileExists{refs.bib}{\addbibresource{refs.bib}}{}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=green!40!black,
+  urlcolor=blue!50!black]{hyperref}
+\usepackage{bookmark}
+\usepackage{xurl}
+
+% ---------------- 科目固有マクロ ----------------
+% {{MACROS}}
+
+% ---------------- ページスタイル ----------------
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE]{\small\leftmark}
+\fancyhead[RO]{\small\rightmark}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ---------------- コード表示 ----------------
+\lstdefinestyle{tb}{basicstyle=\ttfamily\small, columns=fullflexible, keepspaces=true,
+  keywordstyle=\bfseries\color{blue!60!black}, commentstyle=\color{green!40!black},
+  stringstyle=\color{red!60!black}, showstringspaces=false, breaklines=true,
+  numberstyle=\tiny\color{gray}, upquote=true}
+\lstset{style=tb}
+% \begin{code}[language=SQL]{タイトル} ... \end{code}  (オプションは listings のキー)
+\newtcblisting{code}[2][]{enhanced, breakable, listing only, colback=gray!4,
+  colframe=gray!50!black, boxrule=0.5pt, arc=1mm, left=2mm, right=2mm,
+  fonttitle=\bfseries\small, title={#2},
+  listing options={style=tb,#1}}
+
+% ---------------- ボックス環境 ----------------
+% 箱の本文中の \label が箱の番号を指すようにする(tcolorbox は本文で \@currentlabel を節番号に戻すため)
+\makeatletter\newcommand{\tcbfixlabel}{\protected@edef\@currentlabel{\thetcbcounter}}\makeatother
+
+\tcbset{basestyle/.style={enhanced, breakable, boxrule=0.6pt,
+  left=2mm, right=2mm, top=1.5mm, bottom=1.5mm, arc=1.5mm,
+  fonttitle=\bfseries\hypersetup{citecolor=white,linkcolor=white,urlcolor=white}, before skip=3mm, after skip=3mm}}
+
+% 定義  \begin{teigi}{用語名} ... \end{teigi}
+\newtcolorbox[auto counter,number within=chapter]{teigi}[2][]{basestyle,before upper={\tcbfixlabel},
+  colframe=blue!60!black, colback=blue!4,
+  title={定義~\thetcbcounter :~#2}, #1}
+% 定理・公式・重要事項  \begin{teiri}{タイトル} ... \end{teiri}
+\newtcolorbox[auto counter,number within=chapter]{teiri}[2][]{basestyle,before upper={\tcbfixlabel},
+  colframe=red!55!black, colback=red!4,
+  title={重要事項~\thetcbcounter :~#2}, #1}
+% 例  \begin{rei}{タイトル} ... \end{rei}
+\newtcolorbox[auto counter,number within=chapter]{rei}[2][]{basestyle,before upper={\tcbfixlabel},
+  colframe=green!40!black, colback=green!4,
+  title={例~\thetcbcounter :~#2}, #1}
+% 例題  \begin{reidai}{タイトル} ... \end{reidai} 直後に kai
+\newtcolorbox[auto counter,number within=chapter]{reidai}[2][]{basestyle,before upper={\tcbfixlabel},
+  colframe=orange!75!black, colback=orange!6,
+  title={例題~\thetcbcounter :~#2}, #1}
+\newtcolorbox{kai}{basestyle, colframe=gray!60!black, colback=gray!3, title={解答}}
+% 直感的説明  \begin{point} / \begin{point}[タイトル]
+\newtcolorbox{point}[1][ここがポイント]{basestyle,
+  colframe=purple!60!black, colback=purple!4, title={#1}}
+% つまずき注意  \begin{chuui} / \begin{chuui}[タイトル]
+\newtcolorbox{chuui}[1][つまずき注意]{basestyle,
+  colframe=brown!70!black, colback=brown!6, title={#1}}
+% 補足(裏取りした背景・発展。出典付き)  \begin{hosoku}[タイトル] ... \end{hosoku}
+\newtcolorbox{hosoku}[1][補足]{basestyle,
+  colframe=teal!60!black, colback=teal!4, title={補足:~#1}}
+% コラム(発展・歴史・実務)  \begin{column}{タイトル} ... \end{column}
+\newtcolorbox{column}[1]{basestyle, colframe=black!60, colback=black!2,
+  title={コラム:~#1}}
+% 章末問題(演習)  \begin{mondai}{演習: 内容の見出し} ... \end{mondai}
+\newtcolorbox[auto counter,number within=chapter]{mondai}[2][]{basestyle,before upper={\tcbfixlabel},
+  colframe=black!80, colback=yellow!8,
+  title={問~\thetcbcounter~~#2}, #1}
+\newtcolorbox{kaitou}[1]{basestyle, colframe=gray!55!black, colback=white, title={#1}}
+% 章冒頭の学習目標  \begin{mokuhyo} \item ... \end{mokuhyo}
+\newenvironment{mokuhyo}{\begin{tcolorbox}[basestyle, colframe=blue!35!black,
+  colback=blue!2, title={この章の学習目標}]\begin{itemize}[leftmargin=*,itemsep=1pt]}
+  {\end{itemize}\end{tcolorbox}}
+
+% ---------------- 表紙 ----------------
+\newcommand{\bookcover}[4]{% #1 科目名 #2 副題 #3 説明 #4 日付
+\begin{titlepage}
+\begin{tikzpicture}[remember picture,overlay]
+  \fill[blue!45!black] (current page.north west) rectangle ([yshift=-95mm]current page.north east);
+  \fill[blue!25!black] ([yshift=-95mm]current page.north west) rectangle ([yshift=-99mm]current page.north east);
+  \node[anchor=south west,text=white,font=\sffamily\bfseries\fontsize{38}{44}\selectfont]
+    at ([xshift=22mm,yshift=-80mm]current page.north west) {#1};
+  \node[anchor=north west,text width=165mm,font=\Large\bfseries,text=blue!45!black]
+    at ([xshift=22mm,yshift=-110mm]current page.north west) {#2};
+  \node[anchor=north west,text width=165mm,font=\large,text=black!75]
+    at ([xshift=22mm,yshift=-128mm]current page.north west) {#3};
+  \draw[blue!45!black,line width=1pt] ([xshift=22mm,yshift=40mm]current page.south west) -- ([xshift=-22mm,yshift=40mm]current page.south east);
+  \node[anchor=north west,font=\normalsize,text=black!70]
+    at ([xshift=22mm,yshift=36mm]current page.south west) {#4};
+\end{tikzpicture}
+\end{titlepage}}
+
+% 章ごとの参考文献(各章末に「参考文献」節)。本文は \chapinput{chNN} で読み込む
+\newcommand{\chapinput}[1]{\begin{refsection}\input{chapters/#1}%
+  \printbibliography[heading=subbibintoc,title=参考文献]\end{refsection}}
+
+% 図のショートカット  \fig{ファイル名}{幅(\textwidth比)}{キャプション}{ラベル}
+\newcommand{\fig}[4]{\begin{figure}[htbp]\centering
+  \includegraphics[width=#2\textwidth]{#1}\caption{#3}\label{#4}\end{figure}}
+
+\title{{\Huge {{SUBJECT}}}\\[6mm]{\Large {{SUBTITLE}}}}
+\author{\large {{AUTHOR_LINE}}}  % 長い場合は \\ で改行(tabular 内なので自動改行されない)
+\date{{{DATE}}}
+
+\begin{document}
+\frontmatter
+\bookcover{{{SUBJECT}}}{{{SUBTITLE}}}{{{DESCRIPTION}}}{{{DATE}}}
+\input{chapters/preface}
+\tableofcontents
+
+\mainmatter
+% {{PARTS_AND_CHAPTERS}}
+
+\appendix
+% {{APPENDIX}}
+
+\backmatter
+
+\end{document}
