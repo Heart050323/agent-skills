@@ -55,3 +55,30 @@ if exist %USERPROFILE%\.codex\skills.bak\.system xcopy /E /I %USERPROFILE%\.code
 ## 重複インストールの整理
 
 `~/.agents/skills` に同名の旧コピーがある場合は、内容とリンク先を比較する。このリポジトリを正本にするなら、独自変更を保存・統合したうえで旧コピーを探索対象外へ退避する。同名のスキルは自動で内容が統合されない。標準の `.system/` は移動・削除しない。
+
+## yomiyasu の検査記録（各デバイスで1回）
+
+yomiyasu は推敲のたびに、原文・最終稿・資料の全文の写しを含む検査記録を書く。既定ではリポジトリの最上位（Gitの外では作業フォルダ）の `.yomiyasu/` に書くため、置き場所が散らばり、Google Drive などの同期フォルダにも乗る。次の運用にそろえる。
+
+- 置き場所: `~/.local/state/yomiyasu`（内蔵ディスク、同期の外、権限700）に1か所にまとめる。
+- 保存期間: 記録が要るのは推敲から提出前の照合（verify）まで。30日を過ぎた記録と、どの記録からも参照されない写しを週1回消す。
+- `.yomiyasu-words/`（プロジェクトの「直さない語・見直す語」）は記録とは別物。各プロジェクトのGitに入れて残す。
+- 残したくない文章は「記録なしで」と頼む（`--no-record`。この場合、提出前の照合はできない）。
+
+```bash
+mkdir -p ~/.local/state/yomiyasu && chmod 700 ~/.local/state/yomiyasu
+```
+
+Claude Code: `~/.claude/settings.json` の `env` に足す。
+
+```json
+"env": { "YOMIYASU_STATE_DIR": "/Users/<ユーザー名>/.local/state/yomiyasu" }
+```
+
+Codex: `~/.codex/config.toml` の `[shell_environment_policy.set]` に足す。
+
+```toml
+YOMIYASU_STATE_DIR = "/Users/<ユーザー名>/.local/state/yomiyasu"
+```
+
+30日で消す処理: [tools/yomiyasu-prune.py](tools/yomiyasu-prune.py) をmacOSのlaunchdで週1回（月曜10時）動かす。`~/Library/LaunchAgents/local.agent-skills.yomiyasu-prune.plist` に、`/usr/bin/python3 -I ~/agent-skills/tools/yomiyasu-prune.py ~/.local/state/yomiyasu --days 30` を `StartCalendarInterval`（Weekday 1, Hour 10）で登録し、`launchctl bootstrap gui/$(id -u) <plist>` で読み込む。ログは `~/.local/state/yomiyasu-prune.log`。消す前の確認は `--dry-run`。

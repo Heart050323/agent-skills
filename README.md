@@ -60,4 +60,4 @@ X投稿で紹介されたスキルを既存のデザイン系と比較し、役�
 | --- | --- | --- |
 | `yomiyasu` | AIが書いた日本語を、意味と条件を保ったまま読みやすく推敲する（nanaism/yomiyasu 3.4.1をそのまま収録、検査スクリプト付き） | 名前を出して頼んだときに動く。`rewrite-human`は日本語の推敲をyomiyasuに回し、日本語以外と学術文の文体を担当。`slide-deck`はスライドの文言をyomiyasu（種類slides）で推敲 |
 
-例: 「$yomiyasu でこのメールを推敲して」「この文章のAIっぽさをなくして」（rewrite-human経由でyomiyasuの手順）。上流の更新手順は`yomiyasu/references/sources.md`。
+例: 「$yomiyasu でこのメールを推敲して」「この文章のAIっぽさをなくして」（rewrite-human経由でyomiyasuの手順）。上流の更新手順は`yomiyasu/references/sources.md`。検査記録の置き場所と30日での削除は[SETUP.md](SETUP.md)の「yomiyasu の検査記録」。
