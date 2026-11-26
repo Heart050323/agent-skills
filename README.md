@@ -10,6 +10,8 @@ Claude / Codex 用の個人スキル集。`claude/` と `codex/` に各ホスト
 | output-check-fix-loop | output-checker の修正モードへ統合 |
 | citation-verification | verify-citations に一本化。BibTeX形式検査は導入済みの latex-paper-en の補助を利用 |
 | full-output-enforcement | 削除。依頼された成果物の完了条件で判断 |
+| md-slides / html-slides | slide-deck に統合（Marp・reveal.js の出力資料として書き直し） |
+| deck-blueprint | slide-deck に改名・統合 |
 | writing-great-skills | 削除。各ホストの標準creatorを利用 |
 
 デザイン系のスキルは用途別の選択肢です。すべてを同時に適用したり、好みを一般的な品質要件として強制したりしません。削除前の内容はGit履歴から復元できます。
@@ -25,7 +27,7 @@ Claude / Codex 用の個人スキル集。`claude/` と `codex/` に各ホスト
 
 | スキル | 使いどころ | 既存スキルとの分担 |
 | --- | --- | --- |
-| `natural-slides` | 太線・図解・大きな数字を使う日本語の営業資料・提案書 | デザイン方針を担当。reveal.jsは`html-slides`、Marpは`md-slides` |
+| `natural-slides` | 太線・図解・大きな数字を使う日本語の営業資料・提案書 | 見た目の様式を担当。構成・出力形式・点検は`slide-deck` |
 | `modern-web-guidance` | Web標準、フォームのIME、dialog、コンテナークエリ、互換性の確認 | UIの作風ではなく、実装と対応ブラウザーの判断 |
 | `imozuru` | 用語・人・引用から原典へたどる分野調査 | 探索を担当。既存文献の書誌・引用形式の点検は`verify-citations` |
 
@@ -43,3 +45,11 @@ X投稿で紹介されたスキルを既存のデザイン系と比較し、役�
 | `test-techniques` | 「ちゃんとテストして」を境界値分析・状態遷移など技法名に分解して実施 | 成果物のレビューは`output-checker` |
 
 例: 「$frontend-designでこのページの方針を決めて」「$make-interfaces-feel-betterでこの画面を仕上げて」「$canvas-designでセミナー告知を作って」「$test-techniquesで公開前のテストを計画して」。
+
+## スライド制作（2026-11-26整理）
+
+| スキル | 使いどころ | 既存スキルとの分担 |
+| --- | --- | --- |
+| `slide-deck` | スライド制作の入口。作る前に資料の種類・判断事項・各ページの主張・色の役割・ページの強弱を決めて構成案を示し、PPTX・Marp・reveal.jsから形式を選んで作り、画像で「AIっぽさ」を点検する | 画風の指定は`natural-slides`やブランドに従う。旧`md-slides`・`html-slides`はここに統合 |
+
+例: 「$slide-deckで、このメモから経営会議用10枚の構成案を作って」「$slide-deckと$natural-slidesで提案資料を作って」「$slide-deckで勉強会用のreveal.jsスライドを作って」。

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slide Deck"
+  short_description: "Plan slide logic, build the deck, inspect for AI tells"
+  default_prompt: "$slide-deckで、この内容から経営会議用の資料の構成案を作ってください。"
