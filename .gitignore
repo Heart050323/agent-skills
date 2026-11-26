@@ -6,3 +6,11 @@ codex/openai-docs/
 codex/plugin-creator/
 codex/skill-creator/
 codex/skill-installer/
+
+# 公開しないローカル専用スキル
+# Claudeアプリが同期する組織・公式スキル（社内向けを含む）
+claude/synced/
+# 社内プロジェクトの運用手順とローカルパスを含む
+codex/modoreru-conversion-report/
+# 上流にライセンス表記がなく再配布しない
+codex/remotion-best-practices/
