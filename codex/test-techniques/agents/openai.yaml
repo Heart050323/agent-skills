@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Techniques"
+  short_description: "Pick named test techniques by risk and run them"
+  default_prompt: "$test-techniquesで、公開前にこのアプリのテスト計画を立てて実施してください。"

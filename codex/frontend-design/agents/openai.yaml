@@ -1,0 +1,4 @@
+interface:
+  display_name: "Frontend Design"
+  short_description: "Choose a deliberate, non-templated visual direction"
+  default_prompt: "$frontend-designで、このページのデザイン方針を決めてから実装してください。"

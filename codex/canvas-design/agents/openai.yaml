@@ -1,0 +1,4 @@
+interface:
+  display_name: "Canvas Design"
+  short_description: "Design posters and visuals from a written philosophy"
+  default_prompt: "$canvas-designで、このイベントの告知ポスターをPNGで作ってください。"

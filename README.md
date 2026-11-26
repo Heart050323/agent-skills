@@ -30,3 +30,16 @@ Claude / Codex 用の個人スキル集。`claude/` と `codex/` に各ホスト
 | `imozuru` | 用語・人・引用から原典へたどる分野調査 | 探索を担当。既存文献の書誌・引用形式の点検は`verify-citations` |
 
 例: 「$natural-slidesでこの提案を図解中心に」「$modern-web-guidanceで日本語入力時の誤送信を直して」「$imozuruでこの分野の原典を調べて」。この登録では定期監視は開始されません。
+
+## デザインの方向づけ・仕上げ・テスト（2026-11-26追加）
+
+X投稿で紹介されたスキルを既存のデザイン系と比較し、役割が重ならないものだけを入れました。出典・参照コミット・変更点は各スキルの`references/sources.md`にあります。
+
+| スキル | 使いどころ | 既存スキルとの分担 |
+| --- | --- | --- |
+| `frontend-design` | 新しい画面・ページの見た目の方針を決める（Anthropic公式、原文＋日本語組版の補足） | LPの作風は`design-taste-frontend`、既存画面の改修は`redesign-existing-projects` |
+| `make-interfaces-feel-better` | 角丸・影・数字・アイコン・出入りの動きなど細部の仕上げ | ジェスチャーとスプリングは`apple-design` |
+| `canvas-design` | ポスター・告知画像・アート作品のPNG/PDF（Anthropic公式を日本語の告知物向けに改変） | note画像は`note-image`、スライドは`natural-slides`など |
+| `test-techniques` | 「ちゃんとテストして」を境界値分析・状態遷移など技法名に分解して実施 | 成果物のレビューは`output-checker` |
+
+例: 「$frontend-designでこのページの方針を決めて」「$make-interfaces-feel-betterでこの画面を仕上げて」「$canvas-designでセミナー告知を作って」「$test-techniquesで公開前のテストを計画して」。
